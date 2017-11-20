@@ -21,8 +21,12 @@ class Pacman:
         #moves the surface by whatever the speed is set to.
         if self.direction == "WEST":
             self.x -= self.speed
+        elif self.direction == "EAST":
+            self.x += self.speed
         elif self.direction == "SOUTH":
             self.y -= self.speed
+        elif self.direction == "NORTH":
+            self.y += self.speed
     
     def turnSurface(self, direction):
         self.direction = direction
