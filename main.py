@@ -16,6 +16,10 @@ class Controller:
         #self.ghost3=ghost.Ghost(<waiting for ghost class to be created>)
         #self.ghost4=ghost.Ghost(<waiting for ghost class to be created>)
 
+	self.map_background=map.load_map()
+	#map_sprites=pygame.sprite.Group(self.map_background+self.Pacman)
+        for walls in self.map_background: 	
+            self.screen.blit(walls)
 	
 
 
