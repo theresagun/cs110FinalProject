@@ -1,6 +1,7 @@
 import pygame
 
 class Pacman(pygame.sprite.Sprite):
+    pygame.sprite.Sprite.__init__(self)
     def __init__(self, x, y, img_file, direction):
         self.image = pygame.image.load("assets/" + img_file).convert()
         self.rect = self.image.get_rect()
