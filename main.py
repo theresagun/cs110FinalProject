@@ -1,47 +1,54 @@
 import pygame
 import pacman
+import maps
+import sys
 
 
 class Controller:
     def __init__ (self, width=960, height=540):
-	pygame.init()
-	self.width=width
-	self.height=height
-	self.screen=pygame.display.set_mode((self.width, self.height))
-	#self.background=??
-	self.Pacman=pacman.Pacman(5,(480,520),self.screen)
-	self.Pacman.pacman.getSurface()
-	#self.ghost1=ghost.Ghost(<waiting for ghost class to be created>)
-        #self.ghost2=ghost.Ghost(<waiting for ghost class to be created>)
-        #self.ghost3=ghost.Ghost(<waiting for ghost class to be created>)
-        #self.ghost4=ghost.Ghost(<waiting for ghost class to be created>)
+        pygame.init()
+        self.width=width
+        self.height=height
+        self.screen=pygame.display.set_mode((self.width, self.height))
+        self.caption=pygame.display.set_caption('Pacman')
+        self.background = pygame.Surface(self.screen.get_size()).convert()
+        self.Pacman=pacman.Pacman(0,0, "red-square.png" , 1)
+     
+        #self.screen.blit(self.Pacman, (480,520))
+        #self.Pacman.getSurface()
+        self.create_map=maps.Map((100,100), 10)
+        self.map_background=maps.Map.load_map(self.create_map)
+        #self.sprites=pygame.sprite.Group((self.map_background)+ (self.Pacman))
+        #for walls in self.map_background: 	
+         #   self.screen.blit(walls)
 
-	self.map_background=map.load_map()
-	#map_sprites=pygame.sprite.Group(self.map_background+self.Pacman)
-        for walls in self.map_background: 	
-            self.screen.blit(walls)
-	
-
-
-    def main():
-	while True:
-	    for event in pygame.event.get():
-		if event.type==pygame.QUIT:
-		    sys.exit()
-		if event.type == pygame.K_DOWN:
-                    character.turnSurface('SOUTH')
-		if event.type == pygame.K_UP:
-                    character.turnSurface('NORTH')
-		if event.type == pygame.K_LEFT:
-                    character.turnSurface('WEST')
-		if event.type == pygame.K_RIGHT:
-            	    character.turnSurface('EAST')
+    def mainLoop(self):
+        while True:
+            self.background.fill((250, 250, 250))
+            for event in pygame.event.get():
+                if event.type==pygame.QUIT:
+                    sys.exit()
+                if event.type == pygame.K_DOWN:
+                    self.Pacman.turnDown()
+                if event.type == pygame.K_UP:
+                    self.Pacman.turnUp
+                if event.type == pygame.K_LEFT:
+                    self.Pacman.turnLeft
+                if event.type == pygame.K_RIGHT:
+            	    self.Pacman.turnRight
                 
-		#if score.Score.lives==0
+                #if score.Score.lives==0
 		    #GAME OVER
-                
 
-		
+               
+
+            #self.sprites.draw(self.screen)
+            pygame.display.flip()    
+
+def main():
+    main_window = Controller()
+    main_window.mainLoop()
+main()		
 		
 	
 
