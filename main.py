@@ -19,8 +19,15 @@ class Controller:
         self.create_map=maps.Map((100,100), 10)
         self.map_background=maps.Map.load_map(self.create_map)
         #self.sprites=pygame.sprite.Group((self.map_background)+ (self.Pacman))
-        #for walls in self.map_background: 	
-         #   self.screen.blit(walls)
+
+        #adding walls to a sprite group & putting them on screen
+
+
+        self.wall_sprites = pygame.sprite.Group()
+        for walls in self.map_background: 	
+            self.screen.blit(walls)
+            self.wall_sprites.add(walls)
+	
 
     def mainLoop(self):
         while True:
@@ -28,19 +35,31 @@ class Controller:
             for event in pygame.event.get():
                 if event.type==pygame.QUIT:
                     sys.exit()
-                if event.type == pygame.K_DOWN:
-                    self.Pacman.turnDown()
-                if event.type == pygame.K_UP:
-                    self.Pacman.turnUp
-                if event.type == pygame.K_LEFT:
-                    self.Pacman.turnLeft
-                if event.type == pygame.K_RIGHT:
-            	    self.Pacman.turnRight
+                if self.Pacman.canMove(self.wall_sprites):
+                    if event.type == pygame.KEY_DOWN:
+                        if (event.key == pygame.K_UP):
+                            self.Pacman.turnUp()
+                        elif event.key == pygame.K_DOWN:
+                            self.Pacman.turnDown()
+                        elif event.key == pygame.K_RIGHT:
+            	            self.Pacman.turnRight()
+                        elif event.key == pygame.K_LEFT:
+                            self.Pacman.turnLeft()
+               
+                if self.Pacman.canMove(self.wall_sprites)==False:
+                     direction=self.Pacman.direction
+                     self.Pacman.speed=0
+                     if self.Pacman.direction!=direction:
+                         self.Pacman.speed=1
+                      
+                   
                 
+                
+
                 #if score.Score.lives==0
 		    #GAME OVER
 
-               
+                   
 
             #self.sprites.draw(self.screen)
             pygame.display.flip()    
