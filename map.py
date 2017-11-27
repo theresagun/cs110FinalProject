@@ -30,7 +30,7 @@ class Map:
         for row in range(len(self.tile_list)):
             for col in range(len(self.tile_list)):
                 if self.tile_list[row][col] == '1':
-                    self.wall_list.append(wall1.Wall(row*self.tile_size, col*self.tile_size, 'red-square.png'))
+                    self.wall_list.append(wall1.Wall(row*self.tile_size, col*self.tile_size, 'blue-rect.png'))
         return self.wall_list
 
 #This is just me trying to test, use it as an example dont actually use it to test.
