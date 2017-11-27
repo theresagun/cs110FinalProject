@@ -1,5 +1,6 @@
 import pygame
 import wall1
+import dot
 
 class Map:
     def __init__(self, display_size, tile_size):
@@ -27,33 +28,11 @@ class Map:
         #tile in the 2D list and then creates a 'Wall' sprite in the correct spot.
         #it then returns the wall_list so we can make it a sprite group and blit it to the screen.
         self.wall_list = []
+        self.dot_list = []
         for row in range(len(self.tile_list)):
             for col in range(len(self.tile_list)):
                 if self.tile_list[row][col] == '1':
-                    self.wall_list.append(wall1.Wall(row*self.tile_size, col*self.tile_size, 'blue-rect.png'))
+                    self.wall_list.append(wall1.Wall(row*self.tile_size + , col*self.tile_size, 'blue-rect.png'))
+                #elif self.tile_list[row][col] == '0':
+                    #self.dot_list.append(dot.Dot(row, col, ))
         return self.wall_list
-
-#This is just me trying to test, use it as an example dont actually use it to test.
-pygame.init()
-
-tile = 10
-size = (100, 100)
-screen = pygame.display.set_mode(size)
-carryon = True
-
-while carryon:
-    map_test = Map(size, tile)
-    tilemap = map_test.load_map()
-    for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                carryon = False
-    
-    for wall in tilemap:
-        wall.image.blit(screen, wall.rect)
-
-    pygame.display.update()
-
-
-
-
-        

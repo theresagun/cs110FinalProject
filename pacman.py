@@ -3,8 +3,9 @@ import pygame
 class Pacman(pygame.sprite.Sprite):
     def __init__(self, x, y, img_file, direction):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("images/" + img_file).convert()
+        self.image = pygame.image.load("assets/" + img_file).convert()
         self.rect = self.image.get_rect()
+       # self.mask = pygame.mask.Mask((pygame.Surface.get_width(self.image) / 2, pygame.Surface.get_height(self.image) / 2))
         self.rect.x = x
         self.rect.y = y
         self.speed = 1
@@ -44,17 +45,17 @@ class Pacman(pygame.sprite.Sprite):
     #transform the image to be the direction we want it to be.
     def turnRight(self):
         self.direction = 0
-        self.move()
+       
         #self.image = pygame.image.load("assets/" + img_file + '_right').convert()
     def turnUp(self):
         self.direction = 1
-        self.move()
+        
         #self.image = pygame.image.load("assets/" + img_file + '_up').convert()
     def turnLeft(self):
         self.direction = 2
-        self.move()
+        
         #self.image = pygame.image.load("assets/" + img_file + '_left').convert()
     def turnDown(self):
         self.direction = 3
-        self.move()
+        
         #self.image = pygame.image.load("assets/" + img_file + '_down').convert()       

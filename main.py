@@ -12,11 +12,11 @@ class Controller:
         self.screen=pygame.display.set_mode((self.width, self.height))
         self.caption=pygame.display.set_caption('Pacman')
         self.background = pygame.Surface(self.screen.get_size()).convert()
-        self.Pacman=pacman.Pacman(40,40, "pacman.png" , 1)
+        self.Pacman=pacman.Pacman(40,40, "pacman.png" , 3)
      
         #self.screen.blit(self.Pacman, (480,520))
         #self.Pacman.getSurface()
-        self.create_map=maps.Map((100,100), 10)
+        self.create_map=maps.Map((100,100), 36)
         
         #self.sprites=pygame.sprite.Group((self.map_background)+ (self.Pacman))
         self.pacman_sprite=pygame.sprite.Group(self.Pacman)
@@ -42,37 +42,55 @@ class Controller:
                 if event.type==pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
-                    if self.Pacman.canMove(self.wall_sprites):
-                        if event.key == pygame.K_UP:
-                            self.Pacman.turnUp()
-                        elif event.key == pygame.K_DOWN:
-                            self.Pacman.turnDown()
-                        elif event.key == pygame.K_RIGHT:
-            	            self.Pacman.turnRight()                                                     
-                        elif event.key == pygame.K_LEFT:
-                            self.Pacman.turnLeft()
-
+                    if event.key == pygame.K_UP:
+                        self.Pacman.turnUp()
+                        self.Pacman.speed = 1
+                        #self.screen.blit(self.Pacman.rotated_img, (100,100))
+                    elif event.key == pygame.K_DOWN:
+                        self.Pacman.turnDown()
+                        self.Pacman.speed = 1
+                        #self.screen.blit(self.Pacman.rotated_img, (100,100))
+                    elif event.key == pygame.K_RIGHT:
+                        self.Pacman.turnRight()
+                        self.Pacman.speed = 1
+                        #self.screen.blit(self.Pacman.rotated_img, (self.Pacman.rect.x, self.Pacman.rect.y))
+                    elif event.key == pygame.K_LEFT:
+                        self.Pacman.turnLeft()
+                        self.Pacman.speed = 1
+                        #self.screen.blit(self.Pacman.rotated_img, (100,100))
+                    '''
                     else: 
                         if event.key == pygame.K_UP:
-                            self.Pacman.rect.y+5
-                            if event.type==pygame.KEYUP:  
-                                self.Pacman.canMove(self.wall_sprites)==True
-                                                     
+                            self.Pacman.rect.y+100
+                            self.Pacman.speed=0
+                            #if event.type==pygame.KEYUP:  
+                            #   self.Pacman.canMove(self.wall_sprites)==True
                         elif event.key == pygame.K_DOWN:
-                            self.Pacman.rect.y-5
-                            if event.type==pygame.KEYUP: 
-                                self.Pacman.canMove(self.wall_sprites)==True
+                            self.Pacman.rect.y-100
+                            self.Pacman.speed=0
+                            
                         elif event.key == pygame.K_RIGHT:     
-            	            self.Pacman.rect.x-5  
-                            #if event.type==pygame.KEYUP: 
-                                #self.Pacman.canMove(self.wall_sprites)==True
-                            
+                            self.Pacman.rect.x-100 
+                            self.Pacman.speed=0                            
                         elif event.key == pygame.K_LEFT:
-                            self.Pacman.rect.x+5
-                            if event.type==pygame.KEYUP: 
-                                self.Pacman.canMove(self.wall_sprites)==True
-                            
-
+                            self.Pacman.rect.x+100
+                            self.Pacman.speed=0  
+                    '''    
+            if self.Pacman.canMove(self.wall_sprites):
+                self.Pacman.move()
+            else:
+                if self.Pacman.direction == 0:
+                    self.Pacman.rect.x -= 1
+                    self.Pacman.speed = 0
+                elif self.Pacman.direction == 1:
+                    self.Pacman.rect.y += 1
+                    self.Pacman.speed = 0
+                elif self.Pacman.direction == 2:
+                    self.Pacman.rect.x += 1
+                    self.Pacman.speed = 0
+                elif self.Pacman.direction == 3:
+                    self.Pacman.rect.y -= 1
+                    self.Pacman.speed = 0
                         
                     #else:
                         #direction=self.Pacman.direction
@@ -89,7 +107,7 @@ class Controller:
             	         #     self.Pacman.turnRight()                                                     
                           # elif event.key == pygame.K_LEFT:
                            #    self.Pacman.turnLeft()
-                           
+                         
                  
 
 
