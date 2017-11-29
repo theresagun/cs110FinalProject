@@ -31,8 +31,10 @@ class Map:
         self.dot_list = []
         for row in range(len(self.tile_list)):
             for col in range(len(self.tile_list[row])):
-                if self.tile_list[row][col] == '1':
-                    self.wall_list.append(wall1.Wall(col*self.tile_size, row*self.tile_size, 'test.png'))
-                #elif self.tile_list[row][col] == '0':
-                    #self.dot_list.append(dot.Dot(col*self.tile_size, row*self.tile_size, ))
-        return self.wall_list
+                if self.tile_list[row][col] == 'h':
+                    self.wall_list.append(wall1.Wall(col*self.tile_size, row*self.tile_size, 'normal-rect.png'))
+                elif self.tile_list[row][col] == 'd':
+                    self.dot_list.append(dot.Dot(col*self.tile_size, row*self.tile_size, 'dot.png', 'd'))
+                elif self.tile_list[row][col] == 'w':
+                    self.wall_list.append(wall1.Wall(col*self.tile_size, row*self.tile_size, 'rounded-rect.png'))
+        return self.wall_list, self.dot_list

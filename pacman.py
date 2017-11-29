@@ -5,8 +5,8 @@ class Pacman(pygame.sprite.Sprite):
     def __init__(self, x, y, img_file, direction):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("assets/" + img_file).convert()
+        self.image = pygame.transform.scale(self.image, (15,15))
         self.rect = self.image.get_rect()
-        self.mask = pygame.mask.Mask((pygame.Surface.get_width(self.image) - 10, pygame.Surface.get_height(self.image) - 10))
         self.rect.x = x
         self.rect.y = y
         self.speed = 1
@@ -26,6 +26,15 @@ class Pacman(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(self, walls, False):
                 return False
         return True
+    
+    #def dotCollide(self, dots):
+        #for dot in dots:
+            #if self.direction == 0 or self.direction == 2:
+                #if self.rect.centerx in range(dot.rect.centerx - 5, dot.rect.centerx + 5):
+                    #self.rect.centerx
+            #elif self.direction == 1 or self.direction == 3:
+
+
 
 
 
