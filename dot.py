@@ -9,5 +9,9 @@ class Dot:
         self.rect.y = y
         self.state = state
     
-    #def collidePacman(self, pacman_mesh):
-       # if pygame.sprite.spritecollide()
+    #def collidePacman(self, pacman):
+        #if pygame.sprite.spritecollide(self, pacman_mesh, True):
+            #if self.state == 'bigdot':
+                #return 500
+            #if self.state == 'smalldot':
+                #return 250

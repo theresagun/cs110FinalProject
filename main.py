@@ -12,11 +12,11 @@ class Controller:
         self.screen=pygame.display.set_mode((self.width, self.height))
         self.caption=pygame.display.set_caption('Pacman')
         self.background = pygame.Surface(self.screen.get_size()).convert()
-        self.Pacman=pacman.Pacman(40,40, "pacman.png" , 3)
+        self.Pacman=pacman.Pacman(300,300, "pacmantest.png" , 3)
      
         #self.screen.blit(self.Pacman, (480,520))
         #self.Pacman.getSurface()
-        self.create_map=maps.Map((100,100), 36)
+        self.create_map=maps.Map((300,300), 16)
         
         #self.sprites=pygame.sprite.Group((self.map_background)+ (self.Pacman))
         self.pacman_sprite=pygame.sprite.Group(self.Pacman)
@@ -42,19 +42,19 @@ class Controller:
                 if event.type==pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
+                    if event.key == pygame.K_UP and self.Pacman.canMove(self.wall_sprites):
                         self.Pacman.turnUp()
                         self.Pacman.speed = 1
                         #self.screen.blit(self.Pacman.rotated_img, (100,100))
-                    elif event.key == pygame.K_DOWN:
+                    elif event.key == pygame.K_DOWN and self.Pacman.canMove(self.wall_sprites):
                         self.Pacman.turnDown()
                         self.Pacman.speed = 1
                         #self.screen.blit(self.Pacman.rotated_img, (100,100))
-                    elif event.key == pygame.K_RIGHT:
+                    elif event.key == pygame.K_RIGHT and self.Pacman.canMove(self.wall_sprites):
                         self.Pacman.turnRight()
                         self.Pacman.speed = 1
                         #self.screen.blit(self.Pacman.rotated_img, (self.Pacman.rect.x, self.Pacman.rect.y))
-                    elif event.key == pygame.K_LEFT:
+                    elif event.key == pygame.K_LEFT and self.Pacman.canMove(self.wall_sprites):
                         self.Pacman.turnLeft()
                         self.Pacman.speed = 1
                         #self.screen.blit(self.Pacman.rotated_img, (100,100))

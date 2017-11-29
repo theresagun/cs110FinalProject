@@ -1,11 +1,12 @@
 import pygame
+import wall1
 
 class Pacman(pygame.sprite.Sprite):
     def __init__(self, x, y, img_file, direction):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("assets/" + img_file).convert()
         self.rect = self.image.get_rect()
-       # self.mask = pygame.mask.Mask((pygame.Surface.get_width(self.image) / 2, pygame.Surface.get_height(self.image) / 2))
+        self.mask = pygame.mask.Mask((pygame.Surface.get_width(self.image) - 10, pygame.Surface.get_height(self.image) - 10))
         self.rect.x = x
         self.rect.y = y
         self.speed = 1
@@ -17,8 +18,8 @@ class Pacman(pygame.sprite.Sprite):
         #loops through all the sprites in the walls list and if pacman collides with any of them
         #the function returns False because it means pacman cannot move
         #for wall in walls:
-         #   if wall.collide_rect(self.rect):
-          #      return False
+           # if pygame.sprite.collide_mask(self.mask, pygame.mask.from_surface(wall.image)):
+               # return False
         #return True
         #for wall in walls:
             #if wall.collide_rect(self.rect):
