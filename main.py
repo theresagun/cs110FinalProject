@@ -38,10 +38,60 @@ class Controller:
 #             wall_image=walls[2]
               
             # self.screen.blit(walls)
+		
+		
+	
+		
+		
   #          self.wall_sprites.add(walls)
 
 
-    def mainLoop(self):
+    def startMenu(self):
+        while True:
+            self.background.fill((0, 0, 0))
+            
+            
+            for event in pygame.event.get():
+                if event.type==pygame.QUIT:
+                    sys.exit()
+            img = pygame.image.load('assets/logo.png')
+            img=pygame.transform.scale(img, (500,100))
+            red_rect=pygame.image.load("assets/red-rect.png")
+            red_rect=pygame.transform.scale(red_rect, (200,100))
+            map_pic=pygame.image.load("assets/opening -pic.jpg")
+            map_pic=pygame.transform.scale(map_pic, (250,250))
+
+
+            left1 = pygame.font.SysFont("Times New Roman", 30)
+            left_mode_top=left1.render('Press Left Key ', False, (0, 0, 0))
+            left_mode_bottom=left1.render("For Mode 1", False, (0,0,0))
+
+
+            
+            right1 = pygame.font.SysFont("Times New Roman", 30)
+            right_mode_top=right1.render('Press Right Key ', False, (0, 0, 0))
+            right_mode_bottom=right1.render("For Mode 2", False, (0,0,0))
+            
+            
+
+
+            self.screen.blit(self.background, (0, 0))
+            self.screen.blit(img,(245,0))
+            self.screen.blit(red_rect,(150,450))
+            self.screen.blit(red_rect,(650,450))
+
+            self.screen.blit(left_mode_top, (165,460))
+            self.screen.blit(left_mode_bottom, (175,490))
+            self.screen.blit(right_mode_top, (660,460))
+            self.screen.blit(right_mode_bottom, (675,490))
+            self.screen.blit(map_pic, (370,400))
+              
+
+            pygame.display.flip()    
+
+
+
+    def gameLoop(self):
         pygame.key.set_repeat(1,60)
         while True:
             self.background.fill((0, 0, 0))
