@@ -27,17 +27,16 @@ class Pacman(pygame.sprite.Sprite):
                 return False
         return True
     
-    #def dotCollide(self, dots):
-        #for dot in dots:
-            #if self.direction == 0 or self.direction == 2:
-                #if self.rect.centerx in range(dot.rect.centerx - 5, dot.rect.centerx + 5):
-                    #self.rect.centerx
-            #elif self.direction == 1 or self.direction == 3:
+    def nodeCollide(self, nodes):
+        for node in nodes:
+            if self.rect.centerx in range(node.rect.centerx - 5, node.rect.centerx + 5) and self.rect.centery in range(node.rect.centery - 5, node.rect.centery + 5):
+                return (True, node)
+        
+        return (False, None)
 
-
-
-
-
+    def correctTurn(self, dot):
+        self.rect.centerx = dot.rect.centerx
+        self.rect.centery = dot.rect.centery
 
     def move(self):
         #moves the surface by whatever the speed is set to.

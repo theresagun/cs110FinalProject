@@ -1,6 +1,8 @@
 import pygame
 import pacman
 import maps
+import ghosts
+import random
 import sys
 
 
@@ -12,7 +14,8 @@ class Controller:
         self.screen=pygame.display.set_mode((self.width, self.height))
         self.caption=pygame.display.set_caption('Pacman')
         self.background = pygame.Surface(self.screen.get_size()).convert()
-        self.Pacman=pacman.Pacman(300,300, "pacman1.png" , 3)
+        self.Pacman=pacman.Pacman(315,315, "pacman1.png" , 3)
+        self.Ghost = ghosts.Ghost(315, 315, 'blueghost.png', 1)
      
         #self.screen.blit(self.Pacman, (480,520))
         #self.Pacman.getSurface()
@@ -20,12 +23,15 @@ class Controller:
         
         #self.sprites=pygame.sprite.Group((self.map_background)+ (self.Pacman))
         self.pacman_sprite=pygame.sprite.Group(self.Pacman)
+        self.ghost_sprite=pygame.sprite.Group(self.Ghost)
         
         #adding walls to a sprite group & putting them on screen
 
         self.map_background=maps.Map.load_map(self.create_map)
         self.wall_sprites = pygame.sprite.Group(self.map_background[0])
         self.dot_sprites = pygame.sprite.Group(self.map_background[1])
+        self.node_sprites = pygame.sprite.Group(self.map_background[2])
+        print(self.node_sprites)
         #print(self.map_background)
     #    for walls in self.wall_sprites: 
      #         walls.draw(self.screen)
@@ -39,23 +45,50 @@ class Controller:
         pygame.key.set_repeat(1,60)
         while True:
             self.background.fill((0, 0, 0))
+            self.dot_collide_tuple = self.Pacman.nodeCollide(self.node_sprites)
+            self.dot_is_colliding = self.dot_collide_tuple[0]
+            self.colliding_dot = self.dot_collide_tuple[1]
             for event in pygame.event.get():
                 if event.type==pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP and self.Pacman.canMove(self.wall_sprites):
+                    if event.key == pygame.K_UP and self.Pacman.canMove(self.wall_sprites) and self.dot_is_colliding:
+                        self.Pacman.rect.centerx = self.colliding_dot.rect.centerx
+                        self.Pacman.rect.centery = self.colliding_dot.rect.centery
                         self.Pacman.turnUp()
                         self.Pacman.speed = 1
                         #self.screen.blit(self.Pacman.rotated_img, (100,100))
-                    elif event.key == pygame.K_DOWN and self.Pacman.canMove(self.wall_sprites):
+                    elif event.key == pygame.K_DOWN and self.Pacman.canMove(self.wall_sprites) and self.dot_is_colliding:
+                        self.Pacman.rect.centerx = self.colliding_dot.rect.centerx
+                        self.Pacman.rect.centery = self.colliding_dot.rect.centery
                         self.Pacman.turnDown()
                         self.Pacman.speed = 1
                         #self.screen.blit(self.Pacman.rotated_img, (100,100))
-                    elif event.key == pygame.K_RIGHT and self.Pacman.canMove(self.wall_sprites):
+                    elif event.key == pygame.K_RIGHT and self.Pacman.canMove(self.wall_sprites) and self.dot_is_colliding:
+                        self.Pacman.rect.centerx = self.colliding_dot.rect.centerx
+                        self.Pacman.rect.centery = self.colliding_dot.rect.centery
                         self.Pacman.turnRight()
                         self.Pacman.speed = 1
                         #self.screen.blit(self.Pacman.rotated_img, (self.Pacman.rect.x, self.Pacman.rect.y))
-                    elif event.key == pygame.K_LEFT and self.Pacman.canMove(self.wall_sprites):
+                    elif event.key == pygame.K_LEFT and self.Pacman.canMove(self.wall_sprites) and self.dot_is_colliding:
+                        self.Pacman.rect.centerx = self.colliding_dot.rect.centerx
+                        self.Pacman.rect.centery = self.colliding_dot.rect.centery
+                        self.Pacman.turnLeft()
+                        self.Pacman.speed = 1
+                        #self.screen.blit(self.Pacman.rotated_img, (100,100))
+                    if event.key == pygame.K_UP and self.Pacman.canMove(self.wall_sprites) and self.Pacman.direction == 3:
+                        self.Pacman.turnUp()
+                        self.Pacman.speed = 1
+                        #self.screen.blit(self.Pacman.rotated_img, (100,100))
+                    elif event.key == pygame.K_DOWN and self.Pacman.canMove(self.wall_sprites) and self.Pacman.direction == 1:
+                        self.Pacman.turnDown()
+                        self.Pacman.speed = 1
+                        #self.screen.blit(self.Pacman.rotated_img, (100,100))
+                    elif event.key == pygame.K_RIGHT and self.Pacman.canMove(self.wall_sprites) and self.Pacman.direction == 2:
+                        self.Pacman.turnRight()
+                        self.Pacman.speed = 1
+                        #self.screen.blit(self.Pacman.rotated_img, (100,100))
+                    elif event.key == pygame.K_LEFT and self.Pacman.canMove(self.wall_sprites) and self.Pacman.direction == 0:
                         self.Pacman.turnLeft()
                         self.Pacman.speed = 1
                         #self.screen.blit(self.Pacman.rotated_img, (100,100))
@@ -76,7 +109,20 @@ class Controller:
                         elif event.key == pygame.K_LEFT:
                             self.Pacman.rect.x+100
                             self.Pacman.speed=0  
-                    '''    
+                    '''  
+            if self.Ghost.nodeCollide(self.node_sprites):
+                if self.Ghost.direction == 0:
+                    self.Ghost.direction == random.choice([1,2,3])
+                elif self.Ghost.direction == 1:
+                    self.Ghost.direction == random.choice([0,2,3])
+                elif self.Ghost.direction == 2:
+                    self.Ghost.direction == random.choice([0,1,3])
+                elif self.Ghost.direction == 3:
+                    self.Ghost.direction == random.choice([0,1,2])
+
+            self.Ghost.move()
+                
+                    
             if self.Pacman.canMove(self.wall_sprites):
                 self.Pacman.move()
             else:
@@ -135,7 +181,9 @@ class Controller:
                    
             self.screen.blit(self.background, (0, 0))
             self.dot_sprites.draw(self.screen)
+            self.node_sprites.draw(self.screen)
             self.wall_sprites.draw(self.screen)
+            self.ghost_sprite.draw(self.screen)
             self.pacman_sprite.draw(self.screen)
             pygame.display.flip()    
 

@@ -1,6 +1,7 @@
 import pygame
 import wall1
 import dot
+import node
 
 class Map:
     def __init__(self, display_size, tile_size):
@@ -29,12 +30,17 @@ class Map:
         #it then returns the wall_list so we can make it a sprite group and blit it to the screen.
         self.wall_list = []
         self.dot_list = []
+        self.node_list = []
         for row in range(len(self.tile_list)):
             for col in range(len(self.tile_list[row])):
-                if self.tile_list[row][col] == 'h':
+                if self.tile_list[row][col] in ['h', 'v', 'w', 'x', 'y', 'z']:
                     self.wall_list.append(wall1.Wall(col*self.tile_size, row*self.tile_size, 'normal-rect.png'))
-                elif self.tile_list[row][col] == 'd':
+                elif self.tile_list[row][col] in ['d','P']:
                     self.dot_list.append(dot.Dot(col*self.tile_size, row*self.tile_size, 'dot.png', 'd'))
-                elif self.tile_list[row][col] == 'w':
-                    self.wall_list.append(wall1.Wall(col*self.tile_size, row*self.tile_size, 'rounded-rect.png'))
-        return self.wall_list, self.dot_list
+                #elif self.tile_list[row][col] == 'w':
+                    #self.wall_list.append(wall1.Wall(col*self.tile_size, row*self.tile_size, 'rounded-rect.png'))
+                elif self.tile_list[row][col] == 'n':
+                    self.node_list.append(node.Node(col*self.tile_size, row*self.tile_size, 'red-square.png'))
+                    self.dot_list.append(dot.Dot(col*self.tile_size, row*self.tile_size, 'dot.png', 'd'))
+                    
+        return self.wall_list, self.dot_list, self.node_list
