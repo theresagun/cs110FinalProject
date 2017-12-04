@@ -233,14 +233,48 @@ class Controller:
                     self.wait_time=0  
  
             if self.Ghost.nodeCollide(self.node_sprites):
-                if self.Ghost.direction == 0:
-                    self.Ghost.direction == random.choice([1,2,3])
-                elif self.Ghost.direction == 1:
-                    self.Ghost.direction == random.choice([0,2,3])
-                elif self.Ghost.direction == 2:
-                    self.Ghost.direction == random.choice([0,1,3])
-                elif self.Ghost.direction == 3:
-                    self.Ghost.direction == random.choice([0,1,2])
+
+                self.ghost_collide_tuple = self.Ghost.nodeCollide(self.node_sprites)
+                self.ghost_collide = self.ghost_collide_tuple[0]
+                self.ghost_tiles_collide = self.Ghost.wallCollide(self.wall_sprites)
+                if self.ghost_collide:
+
+                    if self.Ghost.direction == 0:
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 0:
+                            self.Ghost.direction = random.choice([1,3])
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 2:
+                            self.Ghost.direction = random.choice([0,1,3])
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 1:
+                            self.Ghost.direction = random.choice([0,3])
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 3:
+                            self.Ghost.direction = random.choice([0,1])
+                    elif self.Ghost.direction == 1:
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 0:
+                            self.Ghost.direction = random.choice([1,2])
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 2:
+                            self.Ghost.direction = random.choice([0,1])
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 1:
+                            self.Ghost.direction = random.choice([0,2])
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 3:
+                            self.Ghost.direction = random.choice([0,1,2])
+                    elif self.Ghost.direction == 2:
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 0:
+                            self.Ghost.direction = random.choice([1,2,3])
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 2:
+                            self.Ghost.direction = random.choice([1,3])
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 1:
+                            self.Ghost.direction = random.choice([2,3])
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 3:
+                            self.Ghost.direction = random.choice([1,2])
+                    elif self.Ghost.direction == 3:
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 0:
+                            self.Ghost.direction = random.choice([2,3])
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 2:
+                            self.Ghost.direction = random.choice([0,3])
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 1:
+                            self.Ghost.direction = random.choice([0,2,3])
+                        if self.ghost_tiles_collide[0] and self.ghost_tiles_collide[1].state == 3:
+                            self.Ghost.direction = random.choice([0,2])
 
             self.Ghost.move()
                 
@@ -330,6 +364,7 @@ class Controller:
             self.node_sprites.draw(self.screen)
             self.wall_sprites.draw(self.screen)
             self.ghost_sprite.draw(self.screen)
+            self.Ghost.test_tiles.draw(self.screen)
             self.pacman_sprite.draw(self.screen)
 
             

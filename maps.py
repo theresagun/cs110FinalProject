@@ -31,6 +31,7 @@ class Map:
         self.wall_list = []
         self.dot_list = []
         self.node_list = []
+        self.floor_list = []
         for row in range(len(self.tile_list)):
             for col in range(len(self.tile_list[row])):
                 if self.tile_list[row][col] in ['h', 'v', 'w', 'x', 'y', 'z']:
