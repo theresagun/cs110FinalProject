@@ -28,13 +28,15 @@ class Ghost(pygame.sprite.Sprite):
          #self.test_tiles = pygame.sprite.Group([self.north, self.south, self.east, self.west])
 
     def wallCollide(self, walls):
+        self.collide_tile_list = []
         for wall in walls:
-            for tile in self.test_tiles:
-                if pygame.sprite.collide_rect(wall,tile):
-                    return (True, tile)
-        return (False, None)
-			
- 
+           for tile in self.test_tiles:
+                if pygame.sprite.collide_rect(wall, tile):
+                    self.collide_tile_list.append(tile)
+        if len(self.collide_tile_list) == 0:
+            return (False, None)
+        else:
+            return (True, self.collide_tile_list)
 
     def nodeCollide(self, nodes):
         for node in nodes:
