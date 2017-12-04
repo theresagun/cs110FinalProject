@@ -33,6 +33,12 @@ class Pacman(pygame.sprite.Sprite):
                 return (True, node)
         
         return (False, None)
+    
+    def dotCollide(self, dots):
+        for dot in dots:
+            if self.rect.centerx in range(dot.rect.centerx - 5, dot.rect.centerx + 5) and self.rect.centery in range(dot.rect.centery - 5, dot.rect.centery + 5):
+                return (True, dot)
+        return (False, None)
 
     def correctTurn(self, dot):
         self.rect.centerx = dot.rect.centerx
