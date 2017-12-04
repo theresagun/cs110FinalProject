@@ -295,6 +295,11 @@ class Controller:
                     self.Pacman.rect.y -= 1
                     self.Pacman.speed = 0
 
+            self.dot_collide = self.Pacman.dotCollide(self.dot_sprites) 
+            if self.dot_collide[0]:
+                self.dot_sprites.remove(self.dot_collide[1])
+
+
                 
                         
                     #else:
