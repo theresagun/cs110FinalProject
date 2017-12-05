@@ -18,6 +18,10 @@ class Map:
         self.tile_size = tile_size
 
     def load_map(self):
+    '''
+    Reads a text file with directions on how to create the map.
+    Loads in image files respectively.
+    '''
         #this reads the file and creates a list of 1's and 0's based on each line of the file
         #self.tile_list looks like -> [['1', '1', '1',...], ['1', '0', '0',...], [...], ...]
         self.tile_list = []
