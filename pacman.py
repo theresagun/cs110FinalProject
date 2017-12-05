@@ -6,16 +6,29 @@ class Pacman(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("assets/" + img_file).convert()
         self.image = pygame.transform.scale(self.image, (15,15))
-        if img_file=="pacman1.png":
-            self.rotated_list=["assets/pacman-right.png","assets/pacman-up.png","assets/pacman-left.png", "assets/pacman-down.png"]
-        else: 
-            self.rotated_list=["assets/steven-right.jpg","assets/steven-up.jpg","assets/steven-left.jpg", "assets/steven-down.jpg"]
+        self.choose_list=1
+        self.rotated_list=["assets/pacman-right.png","assets/pacman-up.png","assets/pacman-left.png", "assets/pacman-down.png"]
+        #if self.choose_list==1:
+         #   self.rotated_list=["assets/pacman-right.png","assets/pacman-up.png","assets/pacman-left.png", "assets/pacman-down.png"]
+        #if self.choose_list==2:
+         #   self.rotated_list=["assets/steven-right.jpg","assets/steven-up.jpg","assets/steven-left.jpg", "assets/steven-down.jpg"]
+        #if self.image=="pacman1.png":
+         #   self.rotated_list=["assets/pacman-right.png","assets/pacman-up.png","assets/pacman-left.png", "assets/pacman-down.png"]
+        #else: 
+         #   self.rotated_list=["assets/steven-right.jpg","assets/steven-up.jpg","assets/steven-left.jpg", "assets/steven-down.jpg"]
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.speed = 0
         self.lives = 3
         self.direction = direction
+
+    def choose_img(self):
+        if self.choose_list==1:
+            self.rotated_list=["assets/pacman-right.png","assets/pacman-up.png","assets/pacman-left.png", "assets/pacman-down.png"]
+        else:
+            self.rotated_list=["assets/steven-right.jpg","assets/steven-up.png","assets/steven-right.png", "assets/steven-down.png"]
+
     
     def canMove(self, walls):
         #walls (list) - A group of all the wall sprites
@@ -38,12 +51,17 @@ class Pacman(pygame.sprite.Sprite):
         
         return (False, None)
 
-        def dotCollide(self, dots):
-            for dot in dots:
-                if self.rect.centerx in range(dot.rect.centerx - 5, dot.rect.centerx + 5) and self.rect.centery in range(dot.rect.centery - 5, dot.rect.centery + 5):
-                    return (True, dot)
-            return (False, None)
-
+    def dotCollide(self, dots):
+        for dot in dots:
+            if self.rect.centerx in range(dot.rect.centerx - 5, dot.rect.centerx + 5) and self.rect.centery in range(dot.rect.centery - 5, dot.rect.centery + 5):
+                return (True, dot)
+        return (False, None)
+    
+    def bigDotCollide(self, dots):
+        for dot in dots:
+           if self.rect.centerx in range(dot.rect.centerx - 5, dot.rect.centerx + 5) and self.rect.centery in range(dot.rect.centery - 5, dot.rect.centery + 5):
+                return (True, dot)
+        return (False, None)
 
 
 
@@ -66,7 +84,10 @@ class Pacman(pygame.sprite.Sprite):
     
     #All the comments in this will probably not be actual code because I believe we can just
     #transform the image to be the direction we want it to be.
+
+
     def turnRight(self):
+        
         self.direction = 0
         self.rotated_img=pygame.image.load(self.rotated_list[0]).convert()
        

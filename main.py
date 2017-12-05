@@ -4,12 +4,14 @@ import maps
 import ghosts
 import random
 import sys
+import json
 
 
 
 class Controller:
     def __init__ (self, width=1050, height=1050):
         pygame.init()
+        pygame.mixer.init()
         self.width=width
         self.height=height
         self.screen=pygame.display.set_mode((self.width, self.height))
@@ -17,7 +19,8 @@ class Controller:
         self.background = pygame.Surface(self.screen.get_size()).convert()
         self.state="Start"
         self.mode=1
-       
+        
+        self.ready=False
         #if self.mode==1:
          #   self.img="pacman1.png"
         #else:
@@ -25,7 +28,23 @@ class Controller:
         self.Pacman=pacman.Pacman(200,479, "pacman1.png", 2)
         
         self.Ghost = ghosts.Ghost(315, 315, 'blueghost.png', 1)
+
+
+        #self.high_score={'High Score': '0'}
+        #high_score_json=json.dumps(self.high_score)
+        
+        
         self.current_score=0
+        #self.high_score_file=open("assets/highScore.txt", "w")
+        #self.score_words="{'High Score': '0'}" 
+        #self.words_json=json.dumps(self.score_words)
+        #self.high_score_file.write(self.words_json)
+ 
+        #self.high_score_dict=json.loads(self.high_score_file.readline().strip())
+        #self.high_score=self.high_score_json[1]
+        #print(self.high_score)
+        
+        #self.high_score_file.close()
         self.high_score_file=open("assets/highScore.txt", "r")
         self.high_score=self.high_score_file.readline().strip()
         self.timer=True
@@ -43,6 +62,7 @@ class Controller:
         self.wall_sprites = pygame.sprite.Group(self.map_background[0])
         self.dot_sprites = pygame.sprite.Group(self.map_background[1])
         self.node_sprites = pygame.sprite.Group(self.map_background[2])
+        self.big_dot_sprites=pygame.sprite.Group(self.map_background[3])
         print(self.node_sprites)
 
 
@@ -61,12 +81,21 @@ class Controller:
                          self.state="Game"
                          self.mode=1
                          #self.Pacman=pacman.Pacman(200,479, "pacman1.png", 2)
-                         self.gameLoop()
+                         #self.pacman_sprite=pygame.sprite.Group(self.Pacman)
+                         #self.Pacman.image=pygame.image.load("assets/pacman1.png")
+                         self.Pacman.choose_list=1
+                         self.Pacman.choose_img()
+                         self.startGameLoop()
                      if event.key == pygame.K_RIGHT:
                          self.state="Game"
                          self.mode=2
                          #self.Pacman=pacman.Pacman(200,479, "steven.jpg", 2)
-                         self.gameLoop()
+                         #self.pacman_sprite=pygame.sprite.Group(self.Pacman)
+                         self.Pacman.image=pygame.image.load("assets/steven.jpg")
+                         self.Pacman.image = pygame.transform.scale(self. Pacman.image, (15,15))
+                         self.Pacman.choose_list=2
+                         self.Pacman.choose_img()
+                         self.startGameLoop()
                  
             img = pygame.image.load('assets/logo.png')
             img=pygame.transform.scale(img, (500,100))
@@ -76,39 +105,41 @@ class Controller:
             map_pic=pygame.transform.scale(map_pic, (250,250))
 
 
-            left1 = pygame.font.SysFont("Times New Roman", 30)
+            left1 = pygame.font.SysFont("Times New Roman", 25)
             left_mode_top=left1.render('Press Left Key ', False, (0, 0, 0))
-            left_mode_bottom=left1.render("For Mode 1", False, (0,0,0))
+            left_mode_bottom=left1.render("For Regular Mode", False, (0,0,0))
 
 
             
-            right1 = pygame.font.SysFont("Times New Roman", 30)
+            right1 = pygame.font.SysFont("Times New Roman", 25)
             right_mode_top=right1.render('Press Right Key ', False, (0, 0, 0))
-            right_mode_bottom=right1.render("For Mode 2", False, (0,0,0))
+            right_mode_bottom=right1.render("For CS110 mode", False, (0,0,0))
             
             pacman=pygame.image.load("assets/pacman-home.png")
             pacman=pygame.transform.scale(pacman, (150,150))
             dots=pygame.image.load("assets/bigdot.png")
-            black_rect=pygame.image.load("assets/black-rect.png")
-            black_rect=pygame.transform.scale(black_rect, (150,150))
+            #black_rect=pygame.image.load("assets/black-rect.png")
+            #black_rect=pygame.transform.scale(black_rect, (150,150))
             
-            
-
+            high_score=right1.render("Current High Score: "+ self.high_score, False, (250,250,250))
+            beat_it=right1.render("Can you beat it?", False, (250,250,250))
 
             self.screen.blit(self.background, (0, 0))
             self.screen.blit(img,(245,0))
             self.screen.blit(red_rect,(150,450))
             self.screen.blit(red_rect,(650,450))
 
-            self.screen.blit(left_mode_top, (165,460))
-            self.screen.blit(left_mode_bottom, (175,490))
-            self.screen.blit(right_mode_top, (660,460))
-            self.screen.blit(right_mode_bottom, (675,490))
+            self.screen.blit(left_mode_top, (180,460))
+            self.screen.blit(left_mode_bottom, (160,490))
+            self.screen.blit(right_mode_top, (672,460))
+            self.screen.blit(right_mode_bottom, (665,490))
             self.screen.blit(map_pic, (370,400))
-            self.screen.blit(pacman,(290,150))
+            self.screen.blit(pacman,(290,190))
+            self.screen.blit(high_score, (340,110))
+            self.screen.blit(beat_it, (387,150))
             x_val=490
             for i in range(3):
-                self.screen.blit(dots, (x_val,220))
+                self.screen.blit(dots, (x_val,260))
                 x_val+=50
             
             #pacman_home_sprite=pygame.sprite.Group(pacman)
@@ -132,31 +163,78 @@ class Controller:
             pygame.display.flip()    
 
 
+    def startGameLoop(self):
+        while True:
+            self.background.fill((0, 0, 0))
+            
+            for event in pygame.event.get():
+                if event.type==pygame.QUIT:
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    self.ready=True
+                    begin_sound=pygame.mixer.Sound("assets/pacman_beginning.wav") 
+                    begin_sound.play(0)  
+                    if self.timer==True: 
+                        pygame.time.delay(5000)           
+                        self.timer=False
+                        self.gameLoop()
 
+            self.score_font=pygame.font.SysFont("Times New Roman", 30)
+            start=self.score_font.render("Press any key to start!", False, (250,250,250))
+            ready_font=pygame.font.SysFont("Times New Roman", 50)
+            ready=ready_font.render("Ready?", False, (250,250,250))
+            directions_rect=pygame.image.load('assets/white-rounded.png')
+            directions_rect=pygame.transform.scale(directions_rect, (400, 200))
+            directions=self.score_font.render("Directions:", False, (0,0,0))
+            arrows=self.score_font.render("Use the arrow keys to move", False, (0,0,0))
+            collect_dots=self.score_font.render("Collect all the dots", False, (0,0,0))
+            no_ghosts=self.score_font.render("Don't get eaten by a ghost!", False, (0,0,0))
+
+            
+            
+            self.screen.blit(self.background, (0, 0))
+
+            self.dot_sprites.draw(self.screen)
+            self.node_sprites.draw(self.screen)
+            self.wall_sprites.draw(self.screen)
+            self.ghost_sprite.draw(self.screen)
+            self.Ghost.test_tiles.draw(self.screen)
+            self.pacman_sprite.draw(self.screen)
+            
+            self.screen.blit(start, (80,0))
+            self.screen.blit(ready,(150,550))
+            self.screen.blit(directions_rect, (500,200))
+            self.screen.blit(directions, (640,220))
+            self.screen.blit(arrows, (540, 270))
+            self.screen.blit(collect_dots, (540, 310))
+            self.screen.blit(no_ghosts, (540, 350))
+
+
+    
+
+            pygame.display.flip()
+ 
     def gameLoop(self):
         #pygame.event.wait()
         while True:
             #if self.mode==1:
-             #   self.Pacman.image="assets/pacman1.png"
+                #self.Pacman.image=assets/steven.jpg
+                 #self.Pacman.choose_img==Steven
+                 #self.Pacman.image=self.Pacman.rotated_list[0]
+             #   self.Pacman.choose_img("1")
+                 #self.Pacman.image=self.Pacman.rotated_list[0]
             #else:
-             #   self.Pacman.image="assets/steven.jpg"
-
+             #   self.Pacman.choose_img("2")
+                #self.Pacman.image=self.Pacman.rotated_list[0]
             self.background.fill((0, 0, 0))
             self.dot_collide_tuple = self.Pacman.nodeCollide(self.node_sprites)
             self.dot_is_colliding = self.dot_collide_tuple[0]
             self.colliding_dot = self.dot_collide_tuple[1]
-            #self.canMove=self.Pacman.canMove(self.wall_sprites)
-            
-            #pygame.time.set_timer(pygame.KEYDOWN,3000)
-            #self.wait_time=3000
             for event in pygame.event.get():
                 if event.type==pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:    
-                    if self.timer==True:
-                        pygame.time.delay(3000)           
-                        self.timer=False
-                        
+                      
                     if event.key == pygame.K_UP and self.Pacman.canMove(self.wall_sprites) and self.dot_is_colliding:
                         self.Pacman.rect.centerx = self.colliding_dot.rect.centerx
                         self.Pacman.rect.centery = self.colliding_dot.rect.centery
@@ -278,7 +356,8 @@ class Controller:
 
             self.Ghost.move()
                 
-            #pygame.event.wait()        
+            #pygame.event.wait()
+            #if self.noDelay:        
             if self.Pacman.canMove(self.wall_sprites):
                 self.Pacman.move()
             else:
@@ -295,12 +374,26 @@ class Controller:
                     self.Pacman.rect.y -= 1
                     self.Pacman.speed = 0
 
-            self.dot_collide = self.Pacman.dotCollide(self.dot_sprites) 
+            self.dot_collide = self.Pacman.dotCollide(self.dot_sprites)
+            self.big_dot_collide= self.Pacman.bigDotCollide(self.big_dot_sprites)
             if self.dot_collide[0]:
                 self.dot_sprites.remove(self.dot_collide[1])
+                self.current_score+=10
+                #if self.dot_collide[1].state=="D":
+                 #  self.current_score+=20               
+            if (self.current_score)>(int(self.high_score)):
+                self.high_score=self.current_score
+                self.high_score_file=open("assets/highScore.txt", "w")
+                self.high_score_file.write(str(self.high_score))
+                self.high_score_file.close()
 
-
-                
+            if self.big_dot_collide[0]:
+                self.dot_sprites.remove(self.dot_collide[1]) 
+                self.current_score+=20   
+                begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
+                #begin_sound.set_volume(.2)
+                begin_sound.play(0) 
+                            
                         
                     #else:
                         #direction=self.Pacman.direction
@@ -349,28 +442,31 @@ class Controller:
             score_title_font=pygame.font.SysFont("Times New Roman", 40)
             score_title_font.set_underline(1)
             score_title=score_title_font.render("Scoreboard", False, (0,0,0))
-            score_font=pygame.font.SysFont("Times New Roman", 30)
+            #self.score_font=pygame.font.SysFont("Times New Roman", 30)
             ###ADD SCORE
-            current_score=score_font.render("Current Score: " +str(self.current_score) , False, (0,0,0))
-            high_score=score_font.render("High Score: "+self.high_score , False, (0,0,0))
+            current_score=self.score_font.render("Current Score: " +str(self.current_score) , False, (0,0,0))
+            high_score=self.score_font.render("High Score: "+str(self.high_score) , False, (0,0,0))
             
             #Lives
             life=pygame.image.load("assets/pacman1.png")
             life=pygame.transform.scale(life, (30,30))
-            lives=score_font.render("Lives", False, (250,250,250))
+            lives=self.score_font.render("Lives", False, (250,250,250))
 
-            start=score_font.render("Press any key to start!", False, (250,250,250))
+            start=self.score_font.render("Press any key to start!", False, (250,250,250))
             ready_font=pygame.font.SysFont("Times New Roman", 50)
-            self.ready=ready_font.render("Ready?", False, (250,250,250))
+            #self.ready=ready_font.render("Ready?", False, (250,250,250))
                     
                    
             self.screen.blit(self.background, (0, 0))
-            self.dot_sprites.draw(self.screen)
+            self.big_dot_sprites.draw(self.screen)
+            self.dot_sprites.draw(self.screen)            
             self.node_sprites.draw(self.screen)
             self.wall_sprites.draw(self.screen)
             self.ghost_sprite.draw(self.screen)
             self.Ghost.test_tiles.draw(self.screen)
             self.pacman_sprite.draw(self.screen)
+            
+            
 
             
             self.screen.blit(scoreboard, (500,200))
@@ -378,10 +474,10 @@ class Controller:
             self.screen.blit(current_score, (520, 270))
             self.screen.blit(high_score, (520, 310))
  
-            self.screen.blit(start, (80,0))
+            #self.screen.blit(start, (80,0))
             
             self.screen.blit(lives, (175,510))
-            self.screen.blit(self.ready,(630,0))
+           # self.screen.blit(ready,(630,0))
             
             x_value=137
             for i in range(3):
