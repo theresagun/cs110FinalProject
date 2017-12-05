@@ -2,7 +2,7 @@ import pygame
 import wall1
 import dot
 import node
-import bigdot
+
 
 class Map:
     def __init__(self, display_size, tile_size):
