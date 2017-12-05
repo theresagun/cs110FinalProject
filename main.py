@@ -55,6 +55,11 @@ class Controller:
 
 
     def startMenu(self):
+    '''
+    Displays the start menu with Pacman logo and displays high score.
+    Press left key to open the regular Pacman mode.
+    Press right key to open the CS110 Pacman mode.
+    '''
         while True:
             self.background.fill((0, 0, 0))
             for event in pygame.event.get():
@@ -133,6 +138,10 @@ class Controller:
 
 
     def startGameLoop(self):
+    '''
+    Displays the map with directions.
+    Press any key to begin.
+    '''
         while True:
             self.background.fill((0, 0, 0)) 
             for event in pygame.event.get():
@@ -187,7 +196,16 @@ class Controller:
 
             pygame.display.flip()
  
-    def gameLoop(self):        
+    def gameLoop(self):   
+    '''
+    Displays map with directions.
+    Left key makes Pacman turn left if he can. Right, up and down key do the same respectively.
+    Ghosts move and randomly choose their path at each intersection.
+    Add 10 to score when Pacman eats a small dot. 
+    Add 20 to score when Pacman eats a big dot.
+    Updates high score using json file.
+    Displays lives in the form of Pacman images.
+    '''
         while True:            
             self.background.fill((0, 0, 0))
             self.dot_collide_tuple = self.Pacman.nodeCollide(self.node_sprites)
@@ -421,6 +439,10 @@ class Controller:
 
 
     def endScreen(self):
+    '''
+    Displays end screen with GAME OVER and displays final score.
+    Press any key to return to start menu.
+    '''
         while True:
             self.background.fill((0, 0, 0))
             for event in pygame.event.get():
