@@ -185,19 +185,3 @@ class Ghost(pygame.sprite.Sprite):
         self.collide_wall_list = []
         self.move()
 
-class Red(Ghost):
-    def __init__(self):
-        pass
-
-class Blue(Ghost):
-    def __init__(self):
-        pass
-
-class Orange(Ghost):
-    def __init__(self):
-        pass
-
-class Pink(Ghost):
-    def __init__(self):
-        pass
-
