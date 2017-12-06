@@ -19,7 +19,8 @@ class Pacman(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.speed = 0
+        self.speed = 2
+
         self.lives = 3
         self.direction = direction
 

@@ -54,16 +54,16 @@ class Map:
                 elif self.tile_list[row][col] == 'P':
                     self.pacman_x=col*self.tile_size
                     self.pacman_y=row*self.tile_size
-                    self.pacman_tile = pacman.Pacman(col*self.tile_size, row*self.tile_size, "pacman1.png", 2)
+                    self.pacman_tile = pacman.Pacman(col*self.tile_size, row*self.tile_size, "pacman1.png", 0)
                 elif self.tile_list[row][col] == 'r':
-                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'redghost.png', 1))
+                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'redghost.png', 1, "red"))
                     self.dot_list.append(dot.Dot(col*self.tile_size, row*self.tile_size, 'dot.png', 'd'))
                 elif self.tile_list[row][col] == 'p':
-                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'pinkghost.png', 1))
+                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'pinkghost.png', 1, "pink"))
                 elif self.tile_list[row][col] == 'b':
-                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'blueghost.png', 1))
+                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'blueghost.png', 1, "blue"))
                 elif self.tile_list[row][col] == 'o':
-                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'orange-ghost.png', 1))
+                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'orange-ghost.png', 1, "orange"))
                     
         return self.wall_list, self.dot_list, self.node_list, self.big_dot_list, self.pacman_tile, self.ghost_list
 

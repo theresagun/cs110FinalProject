@@ -2,10 +2,10 @@ import pygame
 import random
 
 class Ghost(pygame.sprite.Sprite):
-    def __init__(self, x, y, img_file, direction):
+    def __init__(self, x, y, img_file, direction, color):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("assets/" + img_file).convert()
-        self.image = pygame.transform.scale(self.image, (15,15))
+        self.image = pygame.image.load("assets/" + img_file).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (15,15)).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -16,6 +16,8 @@ class Ghost(pygame.sprite.Sprite):
         self.wall_above = False
         self.wall_left = False
         self.collide_wall_list = []
+        self.color=color
+
  
  
      #def createTestSprites(self):
@@ -36,29 +38,28 @@ class Ghost(pygame.sprite.Sprite):
         '''
         for wall in walls:
             if self.rect.midright[0] in range(wall.rect.midleft[0]-2, wall.rect.midleft[0]+2) and self.rect.midright[1] in range(wall.rect.midleft[1]-2, wall.rect.midleft[1]+2):#self.rect.midright[0] + 1 == wall.rect.midleft[0] and self.rect.midright[1] == wall.rect.midleft[1]:
-                print("collide with right")
+                
                 self.wall_right = True
                 self.collide_wall_list.append(self.wall_right)
                 
                 
             if self.rect.midtop[1] in range(wall.rect.midbottom[1]-2, wall.rect.midbottom[1]+2) and self.rect.midtop[0] in range(wall.rect.midbottom[0]-2, wall.rect.midbottom[0]+2):#self.rect.midtop[1] - 1 == wall.rect.midbottom[1] and self.rect.midtop[0] == wall.rect.midbottom[0]:
-                print("collide with top")
+               
                 self.wall_above = True
                 self.collide_wall_list.append(self.wall_above)
             
                 
             if self.rect.midleft[0] in range(wall.rect.midright[0]-2, wall.rect.midright[0]+2) and self.rect.midleft[1] in range(wall.rect.midright[1]-2,wall.rect.midright[1]+2):#self.rect.midleft[0] - 1  == wall.rect.midright[0] and self.rect.midleft[1] == wall.rect.midright[1]: 
-                print("collide with left")
+                
                 self.wall_left = True
                 self.collide_wall_list.append(self.wall_left)
                 
                 
             if self.rect.midbottom[1] in range(wall.rect.midtop[1]-2, wall.rect.midtop[1]+2) and self.rect.midbottom[0] in range(wall.rect.midtop[0]-2,wall.rect.midtop[0]+2):#self.rect.midbottom[1] + 1 == wall.rect.midtop[1] and self.rect.midbottom[0] == wall.rect.midtop[0]:
-                print("collide with bottom")
+                
                 self.wall_below = True
                 self.collide_wall_list.append(self.wall_below)
 
-        print(self.wall_above)
 
         #print (self.collide_wall_list)
         
@@ -98,10 +99,7 @@ class Ghost(pygame.sprite.Sprite):
     def update(self, nodes, walls):
         if self.nodeCollide(nodes) == True:
             self.wallCollide(walls)
-            print('RIGHT: ' + str(self.wall_right))
-            print('ABOVE: ' + str(self.wall_above))
-            print('LEFT: ' + str(self.wall_left))
-            print('DOWN: ' + str(self.wall_below))
+            
             if len(self.collide_wall_list) == 0:
                 if self.direction == 0:
                     self.direction = random.choice([0,1,3])
@@ -202,3 +200,4 @@ class Orange(Ghost):
 class Pink(Ghost):
     def __init__(self):
         pass
+
