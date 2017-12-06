@@ -20,8 +20,7 @@ class Controller:
         self.mode=1
         self.timer=True
         self.ready=False
-        self.small_dot_amt=181
-        self.big_dot_amt=4
+
         self.clock=pygame.time.Clock()
         self.time=self.clock.tick()
         
@@ -56,7 +55,8 @@ class Controller:
         self.Pacman=self.map_background[4]
         self.pacman_sprite=pygame.sprite.Group(self.Pacman)
 
-
+        self.small_dot_amt=len(self.map_background[1])
+        self.big_dot_amt=len(self.map_background[3])
 
     def startMenu(self):
         while True:
@@ -341,9 +341,9 @@ class Controller:
 
                     
                 
-            if self.small_dot_amt==0 and self.big_dot_amt==0:
-                self.Pacman.rect.x=200   
-                self.Pacman.rect.y=479
+            if self.small_dot_amt==180 and self.big_dot_amt==4:
+                self.Pacman.rect.x=self.create_map.pacman_x  
+                self.Pacman.rect.y=self.create_map.pacman_y
                 self.reset()
 
                 
@@ -407,8 +407,8 @@ class Controller:
 
 
     def reset(self):
-        self.small_dot_amt=181
-        self.big_dot_amt=4
+        self.small_dot_amt=len(self.map_background[1])
+        self.big_dot_amt=len(self.map_background[3])
         self.dot_sprites = pygame.sprite.Group(self.map_background[1])
         self.big_dot_sprites=pygame.sprite.Group(self.map_background[3])
         self.Pacman.speed+=10
