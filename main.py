@@ -346,8 +346,7 @@ class Controller:
             life=pygame.transform.scale(life, (30,30))
             lives=self.score_font.render("Lives", False, (250,250,250))
 
-
-                    
+            self.Pacman.outsideMap()
                    
             self.screen.blit(self.background, (0, 0))
             #Draw all sprites on screen

@@ -78,7 +78,18 @@ class Pacman(pygame.sprite.Sprite):
                 return (True, dot)
         return (False, None)
 
+    def ghostCollide(self, ghosts):
+        for ghost in ghosts:
+           if self.rect.centerx in range(ghost.rect.centerx - 5, ghost.rect.centerx + 5) and self.rect.centery in range(ghost.rect.centery - 5, ghost.rect.centery + 5):
+                return (True, ghost)
+        return (False, None)
 
+    def outsideMap(self):
+        if self.rect.midleft[0] > 420:
+            self.rect.x = 1
+        elif self.rect.midright[0] < 15:
+            self.rect.x = 405
+        
 
     def correctTurn(self, dot):
         self.rect.centerx = dot.rect.centerx
