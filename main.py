@@ -11,7 +11,7 @@ import json
 class Controller:
     def __init__ (self, width=1050, height=1050):
         pygame.init()
-        pygame.mixer.init()
+        #pygame.mixer.init()
         self.width=width
         self.height=height
         self.screen=pygame.display.set_mode((self.width, self.height))
@@ -147,8 +147,8 @@ class Controller:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     self.ready=True
-                    begin_sound=pygame.mixer.Sound("assets/pacman_beginning.wav") 
-                    begin_sound.play(0)  
+                    #begin_sound=pygame.mixer.Sound("assets/pacman_beginning.wav") 
+                    #begin_sound.play(0)  
                     if self.timer==True: 
                         pygame.time.delay(5000)           
                         self.timer=False
@@ -283,6 +283,7 @@ class Controller:
             
             for ghost in self.ghost_sprite:
                 ghost.update(self.node_sprites, self.wall_sprites)
+                ghost.outsideMap()
         
             if self.Pacman.canMove(self.wall_sprites):
                 self.Pacman.move()
@@ -307,9 +308,8 @@ class Controller:
                 self.dot_sprites.remove(self.dot_collide[1])
                 self.current_score+=10
                 self.small_dot_amt-=1
-                print(self.small_dot_amt)
-                begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
-                begin_sound.play(0) 
+                #begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
+                #begin_sound.play(0) 
                 #if self.dot_collide[1].state=="D":
                  #  self.current_score+=20               
             if (self.current_score)>(int(self.high_score)):
@@ -328,8 +328,8 @@ class Controller:
                 self.big_dot_sprites.remove(self.big_dot_collide[1]) 
                 self.current_score+=50
                 self.big_dot_amt-=1 
-                begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
-                begin_sound.play(0) 
+                #begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
+                #begin_sound.play(0) 
                 self.ghost_state=2
                 if self.mode==1: 
                     for ghost in self.ghost_sprite:
@@ -354,12 +354,24 @@ class Controller:
                         ghost.image= pygame.transform.scale(self.original_image, (15,15))   
                    
                 #print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+            self.ghost_collide = self.Pacman.ghostCollide(self.ghost_sprite)
+            if self.ghost_state == 1 and self.ghost_collide[0]:
+                self.Pacman.lives -= 1
+                self.Pacman.rect.x=self.create_map.pacman_x  
+                self.Pacman.rect.y=self.create_map.pacman_y
+                self.ghost_collide[1].rect.x = self.create_map.ghost_x
+                self.ghost_collide[1].rect.y = self.create_map.ghost_y
+                self.reset()
+            elif self.ghost_state == 2 and self.ghost_collide[0]:
+                pass
+
+
 
 
 
                     
                 
-            if self.small_dot_amt==260 and self.big_dot_amt==4:
+            if self.small_dot_amt==0 and self.big_dot_amt==0:
                 self.Pacman.rect.x=self.create_map.pacman_x  
                 self.Pacman.rect.y=self.create_map.pacman_y
                 self.reset()
@@ -413,7 +425,7 @@ class Controller:
 
             #Puts 3 pacman image on screen, each representing a life
             x_value=137
-            for i in range(3):
+            for i in range(self.Pacman.lives):
                 self.screen.blit(life, (x_value, 560))
                 x_value+=50
             #Put Black Rect on map

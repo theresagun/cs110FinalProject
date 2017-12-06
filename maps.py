@@ -57,6 +57,9 @@ class Map:
                     self.pacman_tile = pacman.Pacman(col*self.tile_size, row*self.tile_size, "pacman1.png", 0)
                 elif self.tile_list[row][col] == 'r':
                     self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'redghost.png', 1, "red"))
+                    self.ghost_x=col*self.tile_size
+                    self.ghost_y=row*self.tile_size
+                    
                     self.dot_list.append(dot.Dot(col*self.tile_size, row*self.tile_size, 'dot.png', 'd'))
                 elif self.tile_list[row][col] == 'p':
                     self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'pinkghost.png', 1, "pink"))
