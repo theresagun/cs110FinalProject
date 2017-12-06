@@ -86,6 +86,12 @@ class Ghost(pygame.sprite.Sprite):
         elif self.direction == 3:
             self.rect.y += self.speed
 
+    def outsideMap(self):
+        if self.rect.midleft[0] > 420:
+            self.rect.x = 1
+        elif self.rect.midright[0] < 15:
+            self.rect.x = 405
+
     def turnRight(self):
         self.direction = 0
     def turnUp(self):
@@ -184,4 +190,20 @@ class Ghost(pygame.sprite.Sprite):
         self.wall_above = False
         self.collide_wall_list = []
         self.move()
+
+class Red(Ghost):
+    def __init__(self):
+        pass
+
+class Blue(Ghost):
+    def __init__(self):
+        pass
+
+class Orange(Ghost):
+    def __init__(self):
+        pass
+
+class Pink(Ghost):
+    def __init__(self):
+        pass
 
