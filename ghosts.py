@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class Ghost(pygame.sprite.Sprite):
     def __init__(self, x, y, img_file, direction):
@@ -10,13 +11,11 @@ class Ghost(pygame.sprite.Sprite):
         self.rect.y = y
         self.speed = 1
         self.direction = direction
-        self.north = ghostTestSprite(self.rect.x, self.rect.y - 15, 1)
-        self.south = ghostTestSprite(self.rect.x, self.rect.y + 15, 3)
-        self.east = ghostTestSprite(self.rect.x + 15, self.rect.y, 2)
-        self.west = ghostTestSprite(self.rect.x - 15, self.rect.y, 0)
-        self.test_tiles = pygame.sprite.Group([self.north, self.south, self.east, self.west])
-        self.test_tiles_list = self.test_tiles.sprites()
-        print(self.test_tiles_list)
+        self.wall_right = False
+        self.wall_below = False
+        self.wall_above = False
+        self.wall_left = False
+        self.collide_wall_list = []
  
  
      #def createTestSprites(self):
@@ -28,23 +27,52 @@ class Ghost(pygame.sprite.Sprite):
          #self.test_tiles = pygame.sprite.Group([self.north, self.south, self.east, self.west])
 
     def wallCollide(self, walls):
-        self.collide_tile_list = []
+        '''
         for wall in walls:
-            for tile in self.test_tiles:
+           for tile in self.test_tiles:
                 if pygame.sprite.collide_rect(wall, tile):
+                    print(tile)
                     self.collide_tile_list.append(tile)
-        if len(self.collide_tile_list) == 0:
-            return (False, None)
-        else:
-            return (True, self.collide_tile_list)
-			
- 
+        '''
+        for wall in walls:
+            if self.rect.midright[0] in range(wall.rect.midleft[0]-2, wall.rect.midleft[0]+2) and self.rect.midright[1] in range(wall.rect.midleft[1]-2, wall.rect.midleft[1]+2):#self.rect.midright[0] + 1 == wall.rect.midleft[0] and self.rect.midright[1] == wall.rect.midleft[1]:
+                print("collide with right")
+                self.wall_right = True
+                self.collide_wall_list.append(self.wall_right)
+                
+                
+            if self.rect.midtop[1] in range(wall.rect.midbottom[1]-2, wall.rect.midbottom[1]+2) and self.rect.midtop[0] in range(wall.rect.midbottom[0]-2, wall.rect.midbottom[0]+2):#self.rect.midtop[1] - 1 == wall.rect.midbottom[1] and self.rect.midtop[0] == wall.rect.midbottom[0]:
+                print("collide with top")
+                self.wall_above = True
+                self.collide_wall_list.append(self.wall_above)
+            
+                
+            if self.rect.midleft[0] in range(wall.rect.midright[0]-2, wall.rect.midright[0]+2) and self.rect.midleft[1] in range(wall.rect.midright[1]-2,wall.rect.midright[1]+2):#self.rect.midleft[0] - 1  == wall.rect.midright[0] and self.rect.midleft[1] == wall.rect.midright[1]: 
+                print("collide with left")
+                self.wall_left = True
+                self.collide_wall_list.append(self.wall_left)
+                
+                
+            if self.rect.midbottom[1] in range(wall.rect.midtop[1]-2, wall.rect.midtop[1]+2) and self.rect.midbottom[0] in range(wall.rect.midtop[0]-2,wall.rect.midtop[0]+2):#self.rect.midbottom[1] + 1 == wall.rect.midtop[1] and self.rect.midbottom[0] == wall.rect.midtop[0]:
+                print("collide with bottom")
+                self.wall_below = True
+                self.collide_wall_list.append(self.wall_below)
+
+        print(self.wall_above)
+
+        #print (self.collide_wall_list)
+        
+
+        #if len(self.collide_tile_list) == 0:
+            #return (False, self.collide_tile_list)
+        #else:
+            #return (True, self.collide_tile_list)
 
     def nodeCollide(self, nodes):
         for node in nodes:
            if self.rect.center == node.rect.center:
-                 return (True, node)
-        return (False, None)
+                 return True
+        return False
  
 
     def move(self):
@@ -56,11 +84,6 @@ class Ghost(pygame.sprite.Sprite):
             self.rect.x -= self.speed
         elif self.direction == 3:
             self.rect.y += self.speed
-                
-        self.north.update(self.rect.x, self.rect.y - 15)
-        self.south.update(self.rect.x, self.rect.y + 15)
-        self.east.update(self.rect.x + 15, self.rect.y)
-        self.west.update(self.rect.x - 15, self.rect.y)
 
     def turnRight(self):
         self.direction = 0
@@ -72,22 +95,97 @@ class Ghost(pygame.sprite.Sprite):
         self.direction = 3
 
 
-    def update(self):
-        pass
-        
-class ghostTestSprite(pygame.sprite.Sprite):
-    def __init__(self, x, y, state):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((15,15))
-        self.image.fill((150,150,150))
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.state = state
-    
-    def update(self, x, y):
-        self.rect.x = x
-        self.rect.y = y
+    def update(self, nodes, walls):
+        if self.nodeCollide(nodes) == True:
+            self.wallCollide(walls)
+            print('RIGHT: ' + str(self.wall_right))
+            print('ABOVE: ' + str(self.wall_above))
+            print('LEFT: ' + str(self.wall_left))
+            print('DOWN: ' + str(self.wall_below))
+            if len(self.collide_wall_list) == 0:
+                if self.direction == 0:
+                    self.direction = random.choice([0,1,3])
+                elif self.direction == 1:
+                    self.direction = random.choice([0,1,2])
+                elif self.direction == 2:
+                    self.direction = random.choice([1,2,3])
+                elif self.direction == 3:
+                    self.direction = random.choice([0,2,3])
+            elif len(self.collide_wall_list) == 1:
+                #self.collide_tile1 = self.collide_tile_list[0]
+                if self.wall_right == True:
+                    if self.direction == 0:
+                        self.direction = random.choice([1,3])
+                    elif self.direction == 1:
+                        self.direction = random.choice([1,2])
+                    elif self.direction == 2:
+                        self.direction = random.choice([1,2,3])
+                    elif self.direction == 3:
+                        self.direction = random.choice([2,3])
+                elif self.wall_above == True:
+                    if self.direction == 0:
+                        self.direction = random.choice([0,3])
+                    elif self.direction == 1:
+                        self.direction = random.choice([0,2])
+                    elif self.direction == 2:
+                        self.direction = random.choice([2,3])
+                    elif self.direction == 3:
+                        self.direction = random.choice([0,2,3])
+                elif self.wall_left == True:
+                    if self.direction == 0:
+                        self.direction = random.choice([0,1,3])
+                    elif self.direction == 1:
+                        self.direction = random.choice([0,1])
+                    elif self.direction == 2:
+                        self.direction = random.choice([1,3])
+                    elif self.direction == 3:
+                        self.direction = random.choice([0,3])
+                elif self.wall_below == True:
+                    if self.direction == 0:
+                        self.direction = random.choice([0,1])
+                    elif self.direction == 1:
+                        self.direction = random.choice([0,1,2])
+                    elif self.direction == 2:
+                        self.direction = random.choice([1,2])
+                    elif self.direction == 3:
+                        self.direction = random.choice([0,2])
+                #determine state of the tile then make a random choice that is not the
+                #direction the tile is in or backwards
+            elif len(self.collide_wall_list) == 2:
+                #self.collide_tile1 = self.collide_tile_list[0]
+                #self.collide_tile2 = self.collide_tile_list[1]
+                self.bot_right = self.wall_below and self.wall_right
+                self.top_right = self.wall_above and self.wall_right
+                self.top_left = self.wall_above and self.wall_left
+                self.bot_left = self.wall_below and self.wall_left
+                if self.bot_right:
+                    if self.direction == 3:
+                        self.direction = 2
+                    elif self.direction == 0:
+                        self.direction = 1
+                elif self.top_right:
+                    if self.direction == 1:
+                        self.direction = 2
+                    elif self.direction == 0:
+                        self.direction = 3
+                elif self.top_left:
+                    if self.direction == 1:
+                        self.direction = 0
+                    elif self.direction == 2:
+                        self.direction = 3
+                elif self.bot_left:
+                    if self.direction == 3:
+                        self.direction = 0
+                    elif self.direction == 2:
+                        self.direction = 1
+                #determine the state of each tile then go the only direction that
+                #is available
+        self.wall_below = False
+        self.wall_right = False
+        self.wall_left = False
+        self.wall_above = False
+        self.collide_wall_list = []
+        self.move()
 
 class Red(Ghost):
     def __init__(self):
