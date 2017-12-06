@@ -4,6 +4,7 @@ import dot
 import node
 import pacman
 import ghosts
+import random
 
 
 class Map:
@@ -56,17 +57,24 @@ class Map:
                     self.pacman_y=row*self.tile_size
                     self.pacman_tile = pacman.Pacman(col*self.tile_size, row*self.tile_size, "pacman1.png", 0)
                 elif self.tile_list[row][col] == 'r':
-                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'redghost.png', 1, "red"))
-                    self.ghost_x=col*self.tile_size
-                    self.ghost_y=row*self.tile_size
+                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'redghost.png', random.choice([0,2]), "red", 2))
+                    self.ghost_rx=col*self.tile_size
+                    self.ghost_ry=row*self.tile_size
                     
                     self.dot_list.append(dot.Dot(col*self.tile_size, row*self.tile_size, 'dot.png', 'd'))
                 elif self.tile_list[row][col] == 'p':
-                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'pinkghost.png', 1, "pink"))
+                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'pinkghost.png', 1, "pink", 1))
+                    self.ghost_px=col*self.tile_size
+                    self.ghost_py=row*self.tile_size
                 elif self.tile_list[row][col] == 'b':
-                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'blueghost.png', 1, "blue"))
+                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'blueghost.png', 1, "blue", 1))
+                    self.ghost_bx=col*self.tile_size
+                    self.ghost_by=row*self.tile_size
+    
                 elif self.tile_list[row][col] == 'o':
-                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'orange-ghost.png', 1, "orange"))
+                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'orange-ghost.png', 1, "orange", 1))
+                    self.ghost_ox=col*self.tile_size
+                    self.ghost_oy=row*self.tile_size
                     
         return self.wall_list, self.dot_list, self.node_list, self.big_dot_list, self.pacman_tile, self.ghost_list
 

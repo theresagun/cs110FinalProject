@@ -2,7 +2,7 @@ import pygame
 import random
 
 class Ghost(pygame.sprite.Sprite):
-    def __init__(self, x, y, img_file, direction, color):
+    def __init__(self, x, y, img_file, direction, color, gate):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("assets/" + img_file).convert_alpha()
         self.image = pygame.transform.scale(self.image, (15,15)).convert_alpha()
@@ -17,6 +17,7 @@ class Ghost(pygame.sprite.Sprite):
         self.wall_left = False
         self.collide_wall_list = []
         self.color=color
+        self.gate=gate
 
  
  
@@ -77,6 +78,7 @@ class Ghost(pygame.sprite.Sprite):
  
 
     def move(self):
+
         if self.direction == 0:
             self.rect.x += self.speed
         elif self.direction == 1:
@@ -86,12 +88,13 @@ class Ghost(pygame.sprite.Sprite):
         elif self.direction == 3:
             self.rect.y += self.speed
 
+        
     def outsideMap(self):
         if self.rect.midleft[0] > 420:
             self.rect.x = 1
         elif self.rect.midright[0] < 15:
             self.rect.x = 405
-
+        
     def turnRight(self):
         self.direction = 0
     def turnUp(self):
@@ -101,6 +104,8 @@ class Ghost(pygame.sprite.Sprite):
     def turnDown(self):
         self.direction = 3
 
+
+   
 
     def update(self, nodes, walls):
         if self.nodeCollide(nodes) == True:
@@ -189,21 +194,6 @@ class Ghost(pygame.sprite.Sprite):
         self.wall_left = False
         self.wall_above = False
         self.collide_wall_list = []
-        self.move()
 
-class Red(Ghost):
-    def __init__(self):
-        pass
-
-class Blue(Ghost):
-    def __init__(self):
-        pass
-
-class Orange(Ghost):
-    def __init__(self):
-        pass
-
-class Pink(Ghost):
-    def __init__(self):
-        pass
+        
 

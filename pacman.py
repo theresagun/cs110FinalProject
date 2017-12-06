@@ -24,7 +24,7 @@ class Pacman(pygame.sprite.Sprite):
         self.lives = 3
         self.direction = direction
 
-    def choose_img(self):
+    def chooseImg(self):
         if self.choose_list==1:
             self.rotated_list=["assets/pacman-right.png","assets/pacman-up.png","assets/pacman-left.png", "assets/pacman-down.png"]
         else:
