@@ -55,11 +55,6 @@ class Controller:
 
 
     def startMenu(self):
-    '''
-    Displays the start menu with Pacman logo and displays high score.
-    Press left key to open the regular Pacman mode.
-    Press right key to open the CS110 Pacman mode.
-    '''
         while True:
             self.background.fill((0, 0, 0))
             for event in pygame.event.get():
@@ -81,11 +76,11 @@ class Controller:
                          self.startGameLoop()
             
             # Creating logo, red rectangles to hold words,and map image     
-            logo = pygame.image.load('assets/logo.png')
+            logo = pygame.image.load('assets/logo.png').convert_alpha()
             logo=pygame.transform.scale(logo, (500,100))
-            red_rect=pygame.image.load("assets/red-rect.png")
+            red_rect=pygame.image.load("assets/red-rect.png").convert_alpha()
             red_rect=pygame.transform.scale(red_rect, (200,100))
-            map_pic=pygame.image.load("assets/opening -pic.jpg")
+            map_pic=pygame.image.load("assets/opening -pic.jpg").convert_alpha()
             map_pic=pygame.transform.scale(map_pic, (250,250))
 
             # Text for left box (regular mode)
@@ -100,9 +95,9 @@ class Controller:
             right_mode_bottom=right1.render("For CS110 mode", False, (0,0,0))
             
             # Create image of pacman and the dot
-            pacman=pygame.image.load("assets/pacman-home.png")
+            pacman=pygame.image.load("assets/pacman-home.png").convert_alpha()
             pacman=pygame.transform.scale(pacman, (150,150))
-            dots=pygame.image.load("assets/bigdot.png")
+            dots=pygame.image.load("assets/bigdot.png").convert_alpha()
             #black_rect=pygame.image.load("assets/black-rect.png")
             #black_rect=pygame.transform.scale(black_rect, (150,150))
             
@@ -138,10 +133,6 @@ class Controller:
 
 
     def startGameLoop(self):
-    '''
-    Displays the map with directions.
-    Press any key to begin.
-    '''
         while True:
             self.background.fill((0, 0, 0)) 
             for event in pygame.event.get():
@@ -163,7 +154,7 @@ class Controller:
             ready=ready_font.render("Ready?", False, (250,250,250))
 
             # Rectangle image to put directions in and the directions text
-            directions_rect=pygame.image.load('assets/white-rounded.png')
+            directions_rect=pygame.image.load('assets/white-rounded.png').convert_alpha()
             directions_rect=pygame.transform.scale(directions_rect, (400, 200))
             directions=self.score_font.render("Directions:", False, (0,0,0))
             arrows=self.score_font.render("Use the arrow keys to move", False, (0,0,0))
@@ -196,16 +187,7 @@ class Controller:
 
             pygame.display.flip()
  
-    def gameLoop(self):   
-    '''
-    Displays map with directions.
-    Left key makes Pacman turn left if he can. Right, up and down key do the same respectively.
-    Ghosts move and randomly choose their path at each intersection.
-    Add 10 to score when Pacman eats a small dot. 
-    Add 20 to score when Pacman eats a big dot.
-    Updates high score using json file.
-    Displays lives in the form of Pacman images.
-    '''
+    def gameLoop(self):        
         while True:            
             self.background.fill((0, 0, 0))
             self.dot_collide_tuple = self.Pacman.nodeCollide(self.node_sprites)
@@ -392,7 +374,7 @@ class Controller:
 
 
             #Scoreboard
-            scoreboard=pygame.image.load('assets/white-rounded.png')
+            scoreboard=pygame.image.load('assets/white-rounded.png').convert_alpha()
             scoreboard=pygame.transform.scale(scoreboard, (400, 200))
             score_title_font=pygame.font.SysFont("Times New Roman", 40)
             score_title_font.set_underline(1)
@@ -401,7 +383,7 @@ class Controller:
             high_score=self.score_font.render("High Score: "+str(self.high_score) , False, (0,0,0))
             
             #Lives
-            life=pygame.image.load("assets/pacman1.png")
+            life=pygame.image.load("assets/pacman1.png").convert_alpha()
             life=pygame.transform.scale(life, (30,30))
             lives=self.score_font.render("Lives", False, (250,250,250))
 
@@ -439,10 +421,6 @@ class Controller:
 
 
     def endScreen(self):
-    '''
-    Displays end screen with GAME OVER and displays final score.
-    Press any key to return to start menu.
-    '''
         while True:
             self.background.fill((0, 0, 0))
             for event in pygame.event.get():
@@ -452,14 +430,14 @@ class Controller:
                     self.startMenu()
 
             #Game Over Logo created            
-            game_over=pygame.image.load("assets/game-over.png")
+            game_over=pygame.image.load("assets/game-over.png").convert_alpha()
             game_over=pygame.transform.scale(game_over, (500,400))
 
             #Final score text
             final_score_font=pygame.font.SysFont("Times New Roman", 35)
             final_score=final_score_font.render("Your final score is: " + str(self.current_score), False, (250,250,250))
             #Play again background rect and text
-            white_rect=pygame.image.load("assets/white-rounded.png")
+            white_rect=pygame.image.load("assets/white-rounded.png").convert_alpha()
             white_rect=pygame.transform.scale(white_rect, (300,100))
             play_again1=final_score_font.render("Press any key to ", False, (0,0,0))
             play_again2=final_score_font.render("play again", False, (0,0,0))
