@@ -11,7 +11,7 @@ import json
 class Controller:
     def __init__ (self, width=1050, height=1050):
         pygame.init()
-        #pygame.mixer.init()
+        pygame.mixer.init()
         self.width=width
         self.height=height
         self.screen=pygame.display.set_mode((self.width, self.height))
@@ -22,6 +22,8 @@ class Controller:
         self.ready=False
         self.small_dot_amt=181
         self.big_dot_amt=4
+        self.clock=pygame.time.Clock()
+        self.time=self.clock.tick()
         
         self.Pacman=pacman.Pacman(200,479, "pacman1.png", 2)
         
@@ -40,17 +42,19 @@ class Controller:
         #self.high_score=self.high_score_file.readline().strip()
 
         self.create_map=maps.Map((300,300), 15)
+        
+        #self.sprites=pygame.sprite.Group((self.map_background)+ (self.Pacman))
+        
 
         self.map_background=maps.Map.load_map(self.create_map)
         self.wall_sprites = pygame.sprite.Group(self.map_background[0])
         self.dot_sprites = pygame.sprite.Group(self.map_background[1])
+        #self.dot_sprites_reset=pygame.sprite.Group(self.map_background[1])
         self.node_sprites = pygame.sprite.Group(self.map_background[2])
         self.big_dot_sprites=pygame.sprite.Group(self.map_background[3])
-        self.ghost_sprite = pygame.sprite.Group(self.map_background[5])
-
+        self.ghost_sprite=pygame.sprite.Group(self.map_background[5])
         self.Pacman=self.map_background[4]
         self.pacman_sprite=pygame.sprite.Group(self.Pacman)
-        
 
 
 
@@ -77,11 +81,11 @@ class Controller:
             
             # Creating logo, red rectangles to hold words,and map image     
             logo = pygame.image.load('assets/logo.png').convert_alpha()
-            logo=pygame.transform.scale(logo, (500,100))
+            logo=pygame.transform.scale(logo, (500,100)).convert_alpha()
             red_rect=pygame.image.load("assets/red-rect.png").convert_alpha()
-            red_rect=pygame.transform.scale(red_rect, (200,100))
+            red_rect=pygame.transform.scale(red_rect, (200,100)).convert_alpha()
             map_pic=pygame.image.load("assets/opening -pic.jpg").convert_alpha()
-            map_pic=pygame.transform.scale(map_pic, (250,250))
+            map_pic=pygame.transform.scale(map_pic, (250,250)).convert_alpha()
 
             # Text for left box (regular mode)
             left1 = pygame.font.SysFont("Times New Roman", 25)
@@ -96,7 +100,7 @@ class Controller:
             
             # Create image of pacman and the dot
             pacman=pygame.image.load("assets/pacman-home.png").convert_alpha()
-            pacman=pygame.transform.scale(pacman, (150,150))
+            pacman=pygame.transform.scale(pacman, (150,150)).convert_alpha()
             dots=pygame.image.load("assets/bigdot.png").convert_alpha()
             #black_rect=pygame.image.load("assets/black-rect.png")
             #black_rect=pygame.transform.scale(black_rect, (150,150))
@@ -140,8 +144,8 @@ class Controller:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     self.ready=True
-                    #begin_sound=pygame.mixer.Sound("assets/pacman_beginning.wav") 
-                    #begin_sound.play(0)  
+                    begin_sound=pygame.mixer.Sound("assets/pacman_beginning.wav") 
+                    begin_sound.play(0)  
                     if self.timer==True: 
                         pygame.time.delay(5000)           
                         self.timer=False
@@ -155,7 +159,7 @@ class Controller:
 
             # Rectangle image to put directions in and the directions text
             directions_rect=pygame.image.load('assets/white-rounded.png').convert_alpha()
-            directions_rect=pygame.transform.scale(directions_rect, (400, 200))
+            directions_rect=pygame.transform.scale(directions_rect, (400, 200)).convert_alpha()
             directions=self.score_font.render("Directions:", False, (0,0,0))
             arrows=self.score_font.render("Use the arrow keys to move", False, (0,0,0))
             collect_dots=self.score_font.render("Collect all the dots", False, (0,0,0))
@@ -167,10 +171,10 @@ class Controller:
  
             # Draws all sprites on screen
             self.dot_sprites.draw(self.screen)
-            self.node_sprites.draw(self.screen)
+            
             self.wall_sprites.draw(self.screen)
             self.ghost_sprite.draw(self.screen)
-           
+            self.big_dot_sprites.draw(self.screen)
             self.pacman_sprite.draw(self.screen)
 
             # Puts all text/image objects on screen
@@ -201,7 +205,7 @@ class Controller:
                         self.Pacman.rect.centerx = self.colliding_dot.rect.centerx
                         self.Pacman.rect.centery = self.colliding_dot.rect.centery
                         self.Pacman.turnUp()
-                        self.Pacman.speed = 1
+                        self.Pacman.speed = 3
                         self.Pacman.image=self.Pacman.rotated_img
                         self.Pacman.image = pygame.transform.scale(self.Pacman.image, (15,15))
                         
@@ -209,14 +213,14 @@ class Controller:
                         self.Pacman.rect.centerx = self.colliding_dot.rect.centerx
                         self.Pacman.rect.centery = self.colliding_dot.rect.centery
                         self.Pacman.turnDown()
-                        self.Pacman.speed = 1
+                        self.Pacman.speed = 3
                         self.Pacman.image=self.Pacman.rotated_img
                         self.Pacman.image = pygame.transform.scale(self.Pacman.image, (15,15))
                     elif event.key == pygame.K_RIGHT and self.Pacman.canMove(self.wall_sprites) and self.dot_is_colliding:
                         self.Pacman.rect.centerx = self.colliding_dot.rect.centerx
                         self.Pacman.rect.centery = self.colliding_dot.rect.centery
                         self.Pacman.turnRight()
-                        self.Pacman.speed = 1
+                        self.Pacman.speed = 3
                         self.Pacman.image=self.Pacman.rotated_img
                         self.Pacman.image = pygame.transform.scale(self.Pacman.image, (15,15))
                         
@@ -224,13 +228,13 @@ class Controller:
                         self.Pacman.rect.centerx = self.colliding_dot.rect.centerx
                         self.Pacman.rect.centery = self.colliding_dot.rect.centery
                         self.Pacman.turnLeft()
-                        self.Pacman.speed = 1
+                        self.Pacman.speed = 3
                         self.Pacman.image=self.Pacman.rotated_img
                         self.Pacman.image = pygame.transform.scale(self. Pacman.image, (15,15))
                         
                     if event.key == pygame.K_UP and self.Pacman.canMove(self.wall_sprites) and self.Pacman.direction == 3:
                         self.Pacman.turnUp()
-                        self.Pacman.speed = 1
+                        self.Pacman.speed = 3
                         self.Pacman.image=self.Pacman.rotated_img
                         self.Pacman.image = pygame.transform.scale(self.Pacman.image, (15,15))
                         
@@ -271,7 +275,7 @@ class Controller:
                             self.Pacman.speed=0  
                     ''' 
                     self.wait_time=0  
- 
+            
             for ghost in self.ghost_sprite:
                 ghost.update(self.node_sprites, self.wall_sprites)
         
@@ -298,8 +302,8 @@ class Controller:
                 self.dot_sprites.remove(self.dot_collide[1])
                 self.current_score+=10
                 self.small_dot_amt-=1
-                #begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
-                #begin_sound.play(0) 
+                begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
+                begin_sound.play(0) 
                 #if self.dot_collide[1].state=="D":
                  #  self.current_score+=20               
             if (self.current_score)>(int(self.high_score)):
@@ -311,17 +315,35 @@ class Controller:
                 self.high_score_file.close()
 
             if self.big_dot_collide[0]:
+
+                self.time=self.clock.tick()
+                #self.big_dot_sprites=big_dot_sprites
+                #big_dot_sprites.remove(self.big_dot_collide[1]) 
                 self.big_dot_sprites.remove(self.big_dot_collide[1]) 
                 self.current_score+=20
-                self.big_dot_amt-=1   
-                #begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
-                #begin_sound.play(0) 
+                self.big_dot_amt-=1 
+                begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
+                begin_sound.play(0) 
 
-            if self.small_dot_amt==175 and self.big_dot_amt==4:
+                if self.mode==1: 
+                    self.inverted_ghost=pygame.image.load("assets/ghost-eaten.png").convert_alpha()
+                    self.Ghost.image=pygame.transform.scale(self.inverted_ghost, (15,15)).convert_alpha()
+                #clock.tick()
+                #time_passed=clock.get_time()
+            #if time_passed==(time-1000) or time_passed==(time+1000):
+             #   self.original_image=pygame.image.load("assets/blueghost.png").convert_alpha()
+              #  self.Ghost.image= pygame.transform.scale(self.image, (15,15))
+            if self.clock.tick()>=self.time+4000:            
+                self.original_image=pygame.image.load("assets/blueghost.png").convert_alpha()
+                self.Ghost.image= pygame.transform.scale(self.original_image, (15,15))   
+                #elif self.mode==2:
+                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+                    
+                
+            if self.small_dot_amt==0 and self.big_dot_amt==0:
                 self.Pacman.rect.x=200   
                 self.Pacman.rect.y=479
-                self.Pacman.speed=2
-                self.Pacman.direction=0
                 self.reset()
 
                 
@@ -334,25 +356,31 @@ class Controller:
 
             #Scoreboard
             scoreboard=pygame.image.load('assets/white-rounded.png').convert_alpha()
-            scoreboard=pygame.transform.scale(scoreboard, (400, 200))
+            scoreboard=pygame.transform.scale(scoreboard, (400, 200)).convert_alpha()
             score_title_font=pygame.font.SysFont("Times New Roman", 40)
             score_title_font.set_underline(1)
             score_title=score_title_font.render("Scoreboard", False, (0,0,0))            
             current_score=self.score_font.render("Current Score: " +str(self.current_score) , False, (0,0,0))
             high_score=self.score_font.render("High Score: "+str(self.high_score) , False, (0,0,0))
-            
+                  
             #Lives
             life=pygame.image.load("assets/pacman1.png").convert_alpha()
-            life=pygame.transform.scale(life, (30,30))
+            life=pygame.transform.scale(life, (30,30)).convert_alpha()
             lives=self.score_font.render("Lives", False, (250,250,250))
-
+               
             self.Pacman.outsideMap()
+
+
+            #Black Rect for next to map
+            black_rect=pygame.image.load("assets/black-rect.png").convert_alpha()
+            black_rect=pygame.transform.scale(black_rect,(15,15)).convert_alpha()
+                             
                    
             self.screen.blit(self.background, (0, 0))
             #Draw all sprites on screen
             self.big_dot_sprites.draw(self.screen)
             self.dot_sprites.draw(self.screen)            
-            self.node_sprites.draw(self.screen)
+            
             self.wall_sprites.draw(self.screen)
             self.ghost_sprite.draw(self.screen)
             
@@ -370,11 +398,21 @@ class Controller:
             for i in range(3):
                 self.screen.blit(life, (x_value, 560))
                 x_value+=50
+            #Put Black Rect on map
+            self.screen.blit(black_rect, (420, 255))
+
+            
             
             pygame.display.flip()  
 
 
     def reset(self):
+        self.small_dot_amt=181
+        self.big_dot_amt=4
+        self.dot_sprites = pygame.sprite.Group(self.map_background[1])
+        self.big_dot_sprites=pygame.sprite.Group(self.map_background[3])
+        self.Pacman.speed+=10
+        self.Pacman.direction=0
         self.gameLoop()
 
 
@@ -389,14 +427,14 @@ class Controller:
 
             #Game Over Logo created            
             game_over=pygame.image.load("assets/game-over.png").convert_alpha()
-            game_over=pygame.transform.scale(game_over, (500,400))
+            game_over=pygame.transform.scale(game_over, (500,400)).convert_alpha()
 
             #Final score text
             final_score_font=pygame.font.SysFont("Times New Roman", 35)
             final_score=final_score_font.render("Your final score is: " + str(self.current_score), False, (250,250,250))
             #Play again background rect and text
             white_rect=pygame.image.load("assets/white-rounded.png").convert_alpha()
-            white_rect=pygame.transform.scale(white_rect, (300,100))
+            white_rect=pygame.transform.scale(white_rect, (300,100)).convert_alpha()
             play_again1=final_score_font.render("Press any key to ", False, (0,0,0))
             play_again2=final_score_font.render("play again", False, (0,0,0))
             
