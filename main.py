@@ -11,7 +11,7 @@ import json
 class Controller:
     def __init__ (self, width=1050, height=1050):
         pygame.init()
-        #pygame.mixer.init()
+        pygame.mixer.init()
         self.width=width
         self.height=height
         self.screen=pygame.display.set_mode((self.width, self.height))
@@ -157,12 +157,11 @@ class Controller:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     self.ready=True
-                    #begin_sound=pygame.mixer.Sound("assets/pacman_beginning.wav") 
-                    #begin_sound.play(0)  
+                    begin_sound=pygame.mixer.Sound("assets/pacman_beginning.wav") 
+                    begin_sound.play(0)  
                     if self.timer==True: 
                         pygame.time.delay(5000)           
                         self.timer=False
-
                         self.gameLoop()
 
             # Ready and click any key to start text
@@ -191,8 +190,8 @@ class Controller:
             self.pacman_sprite.draw(self.screen)
 
             # Puts all text/image objects on screen
-            self.screen.blit(start, (80,0))
-            self.screen.blit(ready,(150,550))
+            self.screen.blit(start, (80,530))
+            self.screen.blit(ready,(130,590))
             self.screen.blit(directions_rect, (500,200))
             self.screen.blit(directions, (640,220))
             self.screen.blit(arrows, (540, 270))
@@ -210,7 +209,12 @@ class Controller:
             self.colliding_dot = self.dot_collide_tuple[1]                                    
             for ghost in self.ghost_sprite:
                 if ghost.gate == 1:
-                    if ghost.color=="blue" and pygame.time.get_ticks()>=self.time+3000:
+                    if ghost.color=="red" and pygame.time.get_ticks()>=self.time+3000:
+                        ghost.rect.x=self.create_map.ghost_rx
+                        ghost.rect.y=self.create_map.ghost_ry
+                        ghost.gate=2
+                        ghost.direction=random.choice([0,2])
+                    elif ghost.color=="blue" and pygame.time.get_ticks()>=self.time+3000:
                         ghost.rect.x=self.create_map.ghost_rx
                         ghost.rect.y=self.create_map.ghost_ry
                         ghost.gate=2
@@ -313,8 +317,8 @@ class Controller:
                 self.dot_sprites.remove(self.dot_collide[1])
                 self.current_score+=10
                 self.small_dot_amt-=1
-                #begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
-                #begin_sound.play(0)             
+                begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
+                begin_sound.play(0)             
             
 
             if self.big_dot_collide[0]:
@@ -325,16 +329,22 @@ class Controller:
                 self.big_dot_sprites.remove(self.big_dot_collide[1]) 
                 self.current_score+=50
                 self.big_dot_amt-=1 
-                #begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
-                #begin_sound.play(0) 
+                begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
+                begin_sound.play(0) 
                 self.ghost_state=2
                 if self.mode==1: 
                     for ghost in self.ghost_sprite:                        
                         ghost.image=self.eaten_ghost
+                        ghost.oppositeDirection()
                         
                 elif self.mode==2:
                     for ghost in self.ghost_sprite:
                         ghost.image=self.eaten_colin
+                        ghost.oppositeDirection()
+                
+
+
+
 
             if (self.current_score)>(int(self.high_score)):
                 self.high_score=self.current_score
@@ -345,7 +355,7 @@ class Controller:
                 self.high_score_file.close()
 
                        
-            if pygame.time.get_ticks()>=self.time+4000 and self.ghost_state==2: 
+            if pygame.time.get_ticks()>=self.time+8000 and self.ghost_state==2: 
                 self.ghost_state=1           
                 for ghost in self.ghost_sprite:
                     if self.mode==1:
@@ -369,10 +379,26 @@ class Controller:
                   #  ghost.rect.y = self.create_map.ghost_y
                    # ghost.direction=0
                 self.reset()
-            elif self.ghost_state == 2 and self.ghost_collide[0]:
-                pass
-            if self.Pacman.lives==0:
-                self.endScreen()
+            elif self.ghost_state == 2 and self.ghost_collide[0]: 
+                self.current_score+=200            
+                if self.ghost_collide[1].color=="red":
+                    self.ghost_collide[1].rect.x=self.create_map.ghost_rx
+                    self.ghost_collide[1].rect.y=self.create_map.ghost_ry-30
+                    self.ghost_collide[1].direction=random.choice([0,2])
+                    self.ghost_collide[1].gate=1
+                elif self.ghost_collide[1].color=="blue":
+                    self.ghost_collide[1].rect.x=self.create_map.ghost_bx
+                    self.ghost_collide[1].rect.y=self.create_map.ghost_by
+                    self.ghost_collide[1].gate=1
+                elif self.ghost_collide[1].color=="pink":
+                    self.ghost_collide[1].rect.x=self.create_map.ghost_px
+                    self.ghost_collide[1].rect.y=self.create_map.ghost_py
+                    self.ghost_collide[1].gate=1
+                elif self.ghost_collide[1].color=="orange":
+                    self.ghost_collide[1].rect.x=self.create_map.ghost_ox
+                    self.ghost_collide[1].rect.y=self.create_map.ghost_oy
+                    self.ghost_collide[1].gate=1   
+            
        
                 
             if self.small_dot_amt==0 and self.big_dot_amt==0:
@@ -435,10 +461,7 @@ class Controller:
 
 
     def reset(self):
-        self.small_dot_amt=len(self.map_background[1])
-        self.big_dot_amt=len(self.map_background[3])
-        self.dot_sprites = pygame.sprite.Group(self.map_background[1])
-        self.big_dot_sprites=pygame.sprite.Group(self.map_background[3])        
+   
         self.Pacman.direction=0
         if self.mode==1:
             self.Pacman.image=self.original_pacman_image
@@ -464,16 +487,32 @@ class Controller:
                 ghost.rect.x=self.create_map.ghost_ox
                 ghost.rect.y=self.create_map.ghost_oy
                 ghost.gate=1
-        self.gameLoop()
+        if self.small_dot_amt==0 and self.big_dot_amt==0:
+            self.timer=True
+            self.small_dot_amt=len(self.map_background[1])
+            self.big_dot_amt=len(self.map_background[3])        
+            self.dot_sprites = pygame.sprite.Group(self.map_background[1])
+            self.big_dot_sprites=pygame.sprite.Group(self.map_background[3])     
+            self.startGameLoop()
+        elif self.Pacman.lives==0:
+            self.timer=True
+            self.small_dot_amt=len(self.map_background[1])
+            self.big_dot_amt=len(self.map_background[3])        
+            self.dot_sprites = pygame.sprite.Group(self.map_background[1])
+            self.big_dot_sprites=pygame.sprite.Group(self.map_background[3]) 
+            self.Pacman.lives=3 
+            self.endScreen() 
+
 
 
     def endScreen(self):
         while True:
+            
             self.background.fill((0, 0, 0))
             for event in pygame.event.get():
                 if event.type==pygame.QUIT:
                     sys.exit()
-                if event.type == pygame.KEYDOWN:
+                if event.type == pygame.KEYDOWN:                   
                     self.startMenu()
 
             #Game Over Logo created            

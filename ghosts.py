@@ -104,6 +104,16 @@ class Ghost(pygame.sprite.Sprite):
     def turnDown(self):
         self.direction = 3
 
+    def oppositeDirection(self):
+        if self.direction==0:
+            self.direction=2
+        elif self.direction==1:
+            self.direction=3
+        elif self.direction==2:
+            self.direction=0
+        elif self.direction==3:
+            self.direction=1
+
 
    
 
