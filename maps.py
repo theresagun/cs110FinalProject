@@ -2,6 +2,8 @@ import pygame
 import wall1
 import dot
 import node
+import pacman
+import ghosts
 
 
 class Map:
@@ -37,18 +39,27 @@ class Map:
         self.dot_list = []
         self.big_dot_list=[]
         self.node_list = []
+        self.ghost_list = []
         for row in range(len(self.tile_list)):
             for col in range(len(self.tile_list[row])):
                 if self.tile_list[row][col] in ['h', 'v', 'w', 'x', 'y', 'z']:
                     self.wall_list.append(wall1.Wall(col*self.tile_size, row*self.tile_size, 'normal-rect.png'))
-                elif self.tile_list[row][col] in ['d','P']:
+                elif self.tile_list[row][col] == 'd':
                     self.dot_list.append(dot.Dot(col*self.tile_size, row*self.tile_size, 'dot.png', 'd'))
-                elif self.tile_list[row][col] in ['D']:
+                elif self.tile_list[row][col] == 'D':
                     self.big_dot_list.append(dot.Dot(col*self.tile_size, row*self.tile_size, 'bigdot.png', 'D'))
-                #elif self.tile_list[row][col] == 'w':
-                    #self.wall_list.append(wall1.Wall(col*self.tile_size, row*self.tile_size, 'rounded-rect.png'))
                 elif self.tile_list[row][col] == 'n':
                     self.node_list.append(node.Node(col*self.tile_size, row*self.tile_size, 'red-square.png'))
                     self.dot_list.append(dot.Dot(col*self.tile_size, row*self.tile_size, 'dot.png', 'd'))
+                elif self.tile_list[row][col] == 'P':
+                    self.pacman_tile = pacman.Pacman(col*self.tile_size, row*self.tile_size, "pacman1.png", 2)
+                elif self.tile_list[row][col] == 'r':
+                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'redghost.png', 1))
+                elif self.tile_list[row][col] == 'p':
+                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'pinkghost.png', 1))
+                elif self.tile_list[row][col] == 'b':
+                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'blueghost.png', 1))
+                elif self.tile_list[row][col] == 'o':
+                    self.ghost_list.append(ghosts.Ghost(col*self.tile_size, row*self.tile_size, 'orange-ghost.png', 1))
                     
-        return self.wall_list, self.dot_list, self.node_list, self.big_dot_list
+        return self.wall_list, self.dot_list, self.node_list, self.big_dot_list, self.pacman_tile, self.ghost_list

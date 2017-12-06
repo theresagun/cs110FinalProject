@@ -11,7 +11,7 @@ import json
 class Controller:
     def __init__ (self, width=1050, height=1050):
         pygame.init()
-        pygame.mixer.init()
+        #pygame.mixer.init()
         self.width=width
         self.height=height
         self.screen=pygame.display.set_mode((self.width, self.height))
@@ -40,16 +40,16 @@ class Controller:
         #self.high_score=self.high_score_file.readline().strip()
 
         self.create_map=maps.Map((300,300), 15)
-        
-        #self.sprites=pygame.sprite.Group((self.map_background)+ (self.Pacman))
-        self.pacman_sprite=pygame.sprite.Group(self.Pacman)
-        self.ghost_sprite=pygame.sprite.Group(self.Ghost)
 
         self.map_background=maps.Map.load_map(self.create_map)
         self.wall_sprites = pygame.sprite.Group(self.map_background[0])
         self.dot_sprites = pygame.sprite.Group(self.map_background[1])
         self.node_sprites = pygame.sprite.Group(self.map_background[2])
         self.big_dot_sprites=pygame.sprite.Group(self.map_background[3])
+        self.ghost_sprite = pygame.sprite.Group(self.map_background[5])
+
+        self.Pacman=self.map_background[4]
+        self.pacman_sprite=pygame.sprite.Group(self.Pacman)
         
 
 
@@ -140,8 +140,8 @@ class Controller:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     self.ready=True
-                    begin_sound=pygame.mixer.Sound("assets/pacman_beginning.wav") 
-                    begin_sound.play(0)  
+                    #begin_sound=pygame.mixer.Sound("assets/pacman_beginning.wav") 
+                    #begin_sound.play(0)  
                     if self.timer==True: 
                         pygame.time.delay(5000)           
                         self.timer=False
@@ -272,8 +272,8 @@ class Controller:
                     ''' 
                     self.wait_time=0  
  
-            
-            self.Ghost.update(self.node_sprites, self.wall_sprites)
+            for ghost in self.ghost_sprite:
+                ghost.update(self.node_sprites, self.wall_sprites)
         
             if self.Pacman.canMove(self.wall_sprites):
                 self.Pacman.move()
@@ -298,8 +298,8 @@ class Controller:
                 self.dot_sprites.remove(self.dot_collide[1])
                 self.current_score+=10
                 self.small_dot_amt-=1
-                begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
-                begin_sound.play(0) 
+                #begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
+                #begin_sound.play(0) 
                 #if self.dot_collide[1].state=="D":
                  #  self.current_score+=20               
             if (self.current_score)>(int(self.high_score)):
@@ -314,8 +314,8 @@ class Controller:
                 self.big_dot_sprites.remove(self.big_dot_collide[1]) 
                 self.current_score+=20
                 self.big_dot_amt-=1   
-                begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
-                begin_sound.play(0) 
+                #begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
+                #begin_sound.play(0) 
 
             if self.small_dot_amt==175 and self.big_dot_amt==4:
                 self.Pacman.rect.x=200   
