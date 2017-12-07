@@ -1,1 +1,1 @@
-{"High Score": 4580}
+{"High Score": 100}
