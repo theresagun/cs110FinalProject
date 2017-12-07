@@ -85,7 +85,7 @@ class Controller:
  
 
     def startMenu(self):
-	'''
+        '''
 	Creates start menu with options to play two different modes. Press left key for mode 1, press right key for mode 2.
 	'''
         while True:
