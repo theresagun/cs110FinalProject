@@ -2,6 +2,9 @@ import pygame
 
 class Dot(pygame.sprite.Sprite):
     def __init__(self, x, y, img_file, state):
+        '''
+        Initializes a dot object with attributes: image, rect, rect.x, rect.y, state.
+        '''
         #initializes the sprite class
         pygame.sprite.Sprite.__init__(self)
         #loads the image for the dot
