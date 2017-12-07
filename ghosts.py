@@ -3,6 +3,9 @@ import random
 
 class Ghost(pygame.sprite.Sprite):
     def __init__(self, x, y, img_file, direction, color, gate):
+         '''
+        Initializes a ghost object with attributes: image, rect, rect.x, rect.y, speed, direction, wall_right, wall_below, wall_above, wall_left, collide_wall_list.
+        '''
         #initializes the sprite class
         pygame.sprite.Sprite.__init__(self)
         #loads the image for the ghost
@@ -32,6 +35,9 @@ class Ghost(pygame.sprite.Sprite):
         self.gate=gate
 
     def wallCollide(self, walls):
+        '''
+        Determines if the ghost collides with a wall.
+        '''
         #loops through the list of wall sprites
         for wall in walls:
             #If the one of the ghosts sides is in a small radius of the walls side.
@@ -54,6 +60,9 @@ class Ghost(pygame.sprite.Sprite):
                 self.collide_wall_list.append(self.wall_below)
 
     def nodeCollide(self, nodes):
+        '''
+        Determines if ghost collides with a node.
+        '''
         #If the ghost's center is equal to the nodes center, then the ghost is at a node
         for node in nodes:
            if self.rect.center == node.rect.center:
@@ -62,6 +71,9 @@ class Ghost(pygame.sprite.Sprite):
  
 
     def move(self):
+        '''
+        Ghost moves based on set direction and speed.
+        '''
         if self.direction == 0:
             self.rect.x += self.speed
         elif self.direction == 1:
@@ -73,6 +85,9 @@ class Ghost(pygame.sprite.Sprite):
 
         
     def outsideMap(self):
+        '''
+        If ghost leaves the map, it will return from the opposide side.
+        '''
         #420 is the right edge of the map and it changes his position to the other side
         if self.rect.midleft[0] > 420:
             self.rect.x = 1
@@ -82,6 +97,9 @@ class Ghost(pygame.sprite.Sprite):
             self.rect.x = 405
 
     def oppositeDirection(self):
+        '''
+        Ghost reverses direction.
+        '''
         if self.direction==0:
             self.direction=2
         elif self.direction==1:
@@ -92,6 +110,9 @@ class Ghost(pygame.sprite.Sprite):
             self.direction=1
 
     def inGateMove(self, walls):
+        '''
+        Ghost bounces in the box.
+        '''
         #changes the wall variables if there is a wall above or below
         self.wallCollide(walls)
 
@@ -118,6 +139,9 @@ class Ghost(pygame.sprite.Sprite):
    
 
     def update(self, nodes, walls):
+        '''
+        Determines which way the ghost goes.
+        '''
         #If the ghost collides with a node
         if self.nodeCollide(nodes) == True:
             #changes the wall variables if there is a wall above or below
