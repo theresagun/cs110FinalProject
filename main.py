@@ -10,19 +10,26 @@ import json
 
 class Controller:
     def __init__ (self, width=1050, height=1050):
+        #initialize pygame and pygame mixer for sounds
         pygame.init()
         pygame.mixer.init()
+        #Set up screen size, caption, background
         self.width=width
         self.height=height
         self.screen=pygame.display.set_mode((self.width, self.height))
         self.caption=pygame.display.set_caption('Pacman')
         self.background = pygame.Surface(self.screen.get_size()).convert()
+        #Set default mode to be pacman
         self.mode=1
+        #Set timer true that is used for time delay once a key is pressed in the game menu
         self.timer=True
-        self.ready=False
-        self.ghost_state=1      
+        
+        #Set ghost state to be normal (compared to state of when big dot is eaten)
+        self.ghost_state=1 
+        # Setting time from when pygame.init was called     
         self.time=pygame.time.get_ticks()
 
+        #Setting current score and finding high score from a file
         self.current_score=0 
         self.high_score_file=open("assets/highScore.txt", "r")
         self.high_score_json=self.high_score_file.readline().strip()
@@ -30,6 +37,7 @@ class Controller:
         self.high_score=self.high_score_dict["High Score"]
         self.high_score_file.close()
         
+        #getting the lists of different objects that will become sprite groups
         self.create_map=maps.Map((300,300), 15)        
         self.map_background=maps.Map.load_map(self.create_map)
 
@@ -48,7 +56,7 @@ class Controller:
         self.Pacman.speed=2
         self.speed=self.Pacman.speed
 
-        #Common Images
+        #Common Images Used
         self.colin_ghost_image=pygame.image.load("assets/colin.png").convert_alpha()
         self.colin_ghost_image= pygame.transform.scale(self.colin_ghost_image, (15,15))
         self.eaten_colin=pygame.image.load("assets/colin-inverted.png").convert_alpha()
@@ -74,6 +82,8 @@ class Controller:
     def startMenu(self):
         while True:
             self.background.fill((0, 0, 0))
+            #if left key pressed, regular pacman version appears
+            #if right key pressed, CS110 version appears
             for event in pygame.event.get():
                 if event.type==pygame.QUIT:
                     sys.exit()
@@ -122,7 +132,7 @@ class Controller:
             high_score=right1.render("Current High Score: "+ str(self.high_score), False, (250,250,250))
             beat_it=right1.render("Can you beat it?", False, (250,250,250))
 
-           
+            #Putting background on screen
             self.screen.blit(self.background, (0, 0))
             # Putting logo, map, Pacman, and red rectangles on screen (all images)
             self.screen.blit(logo,(245,0))
@@ -151,12 +161,13 @@ class Controller:
 
     def startGameLoop(self):
         while True:
-            self.background.fill((0, 0, 0)) 
+            self.background.fill((0, 0, 0))
+            #when a key is pressed, a sound will play, the game will delay for 5 seconds
+            #  (until sound is over), and a new screen will appear in whcih the game will start
             for event in pygame.event.get():
                 if event.type==pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
-                    self.ready=True
                     begin_sound=pygame.mixer.Sound("assets/pacman_beginning.wav") 
                     begin_sound.play(0)  
                     if self.timer==True: 
@@ -179,7 +190,7 @@ class Controller:
             no_ghosts=self.score_font.render("Don't get eaten by a ghost!", False, (0,0,0))
 
             
-            
+            #Put background on screen
             self.screen.blit(self.background, (0, 0))
  
             # Draws all sprites on screen
@@ -204,9 +215,10 @@ class Controller:
         self.time=pygame.time.get_ticks()          
         while True:          
             self.background.fill((0, 0, 0))
-            self.dot_collide_tuple = self.Pacman.nodeCollide(self.node_sprites)
-            self.dot_is_colliding = self.dot_collide_tuple[0]
-            self.colliding_dot = self.dot_collide_tuple[1]                                    
+            self.node_collide_tuple = self.Pacman.nodeCollide(self.node_sprites)
+            self.node_is_colliding = self.node_collide_tuple[0]
+            self.colliding_node = self.node_collide_tuple[1] 
+            #Ghosts leave gate at different times and chooses a random direction to go             
             for ghost in self.ghost_sprite:
                 if ghost.gate == 1:
                     if ghost.color=="red" and pygame.time.get_ticks()>=self.time+3000:
@@ -232,33 +244,34 @@ class Controller:
             for event in pygame.event.get():
                 if event.type==pygame.QUIT:
                     sys.exit()
+                # Changes Pacmans image corresponding to key pressed, Pacman can turn if there is a node
                 if event.type == pygame.KEYDOWN:         
-                    if event.key == pygame.K_UP and self.Pacman.canMove(self.wall_sprites) and self.dot_is_colliding:
-                        self.Pacman.rect.centerx = self.colliding_dot.rect.centerx
-                        self.Pacman.rect.centery = self.colliding_dot.rect.centery
+                    if event.key == pygame.K_UP and self.Pacman.canMove(self.wall_sprites) and self.node_is_colliding:
+                        self.Pacman.rect.centerx = self.colliding_node.rect.centerx
+                        self.Pacman.rect.centery = self.colliding_node.rect.centery
                         self.Pacman.turnUp()
                         self.Pacman.speed = self.speed
                         self.Pacman.image=self.Pacman.rotated_img
                         self.Pacman.image = pygame.transform.scale(self.Pacman.image, (15,15))
                         
-                    elif event.key == pygame.K_DOWN and self.Pacman.canMove(self.wall_sprites) and self.dot_is_colliding:
-                        self.Pacman.rect.centerx = self.colliding_dot.rect.centerx
-                        self.Pacman.rect.centery = self.colliding_dot.rect.centery
+                    elif event.key == pygame.K_DOWN and self.Pacman.canMove(self.wall_sprites) and self.node_is_colliding:
+                        self.Pacman.rect.centerx = self.colliding_node.rect.centerx
+                        self.Pacman.rect.centery = self.colliding_node.rect.centery
                         self.Pacman.turnDown()
                         self.Pacman.speed = self.speed
                         self.Pacman.image=self.Pacman.rotated_img
                         self.Pacman.image = pygame.transform.scale(self.Pacman.image, (15,15))
-                    elif event.key == pygame.K_RIGHT and self.Pacman.canMove(self.wall_sprites) and self.dot_is_colliding:
-                        self.Pacman.rect.centerx = self.colliding_dot.rect.centerx
-                        self.Pacman.rect.centery = self.colliding_dot.rect.centery
+                    elif event.key == pygame.K_RIGHT and self.Pacman.canMove(self.wall_sprites) and self.node_is_colliding:
+                        self.Pacman.rect.centerx = self.colliding_node.rect.centerx
+                        self.Pacman.rect.centery = self.colliding_node.rect.centery
                         self.Pacman.turnRight()
                         self.Pacman.speed = self.speed
                         self.Pacman.image=self.Pacman.rotated_img
                         self.Pacman.image = pygame.transform.scale(self.Pacman.image, (15,15))
                         
-                    elif event.key == pygame.K_LEFT and self.Pacman.canMove(self.wall_sprites) and self.dot_is_colliding:
-                        self.Pacman.rect.centerx = self.colliding_dot.rect.centerx
-                        self.Pacman.rect.centery = self.colliding_dot.rect.centery
+                    elif event.key == pygame.K_LEFT and self.Pacman.canMove(self.wall_sprites) and self.node_is_colliding:
+                        self.Pacman.rect.centerx = self.colliding_node.rect.centerx
+                        self.Pacman.rect.centery = self.colliding_node.rect.centery
                         self.Pacman.turnLeft()
                         self.Pacman.speed = self.speed
                         self.Pacman.image=self.Pacman.rotated_img
@@ -288,6 +301,9 @@ class Controller:
                         self.Pacman.image=self.Pacman.rotated_img
                         self.Pacman.image = pygame.transform.scale(self.Pacman.image, (15,15)) 
             
+            #Ghosts moving depending on if gate or not:
+            # if not in gate-moves aound map
+            # if in gate-moves up and down
             for ghost in self.ghost_sprite:                
                 if ghost.gate==2:
                     ghost.update(self.node_sprites, self.wall_sprites)
@@ -296,9 +312,10 @@ class Controller:
                 if ghost.gate==1:
                     ghost.inGateMove(self.wall_sprites)
                     ghost.move()
-                  
+            #Pacman always moving if he isn't hitting a wall    
             if self.Pacman.canMove(self.wall_sprites):
                 self.Pacman.move()
+            #If pacman is hitting a wall, he is moved away from the wall and his speed is set to 0
             else:
                 if self.Pacman.direction == 0:
                     self.Pacman.rect.x -= 1
@@ -313,7 +330,8 @@ class Controller:
                     self.Pacman.rect.y -= 1
                     self.Pacman.speed = 0
 
-            
+            #If pacman collides with a small dot, the dot disappears from screen, the score increases by 10
+            # and a sound is played
             self.dot_collide = self.Pacman.dotCollide(self.dot_sprites)
             self.big_dot_collide= self.Pacman.bigDotCollide(self.big_dot_sprites)
             if self.dot_collide[0]:
@@ -323,41 +341,31 @@ class Controller:
                 begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
                 begin_sound.play(0)             
             
-
+            #If pacman collides with a big dot, the dot disappears from screen, the score increases by 50
+            #  a sound is played, and the ghost state is set to be when a big dot is eaten
             if self.big_dot_collide[0]:
-
                 self.time=pygame.time.get_ticks()
-                #self.big_dot_sprites=big_dot_sprites
-                #big_dot_sprites.remove(self.big_dot_collide[1]) 
                 self.big_dot_sprites.remove(self.big_dot_collide[1]) 
                 self.current_score+=50
                 self.big_dot_amt-=1 
                 begin_sound=pygame.mixer.Sound("assets/pacman_chomp.wav") 
                 begin_sound.play(0) 
                 self.ghost_state=2
+                #The image of the ghost changes depending on what mode you're in (regular or cs110) and
+                #  the ghost changes direction
                 if self.mode==1: 
                     for ghost in self.ghost_sprite:                        
                         ghost.image=self.eaten_ghost
-                        ghost.oppositeDirection()
-                        
+                        ghost.oppositeDirection()                        
                 elif self.mode==2:
                     for ghost in self.ghost_sprite:
                         ghost.image=self.eaten_colin
                         ghost.oppositeDirection()
-                
 
 
-
-
-            if (self.current_score)>(int(self.high_score)):
-                self.high_score=self.current_score
-                self.high_score_dict["High Score"]=self.high_score
-                self.high_score_file=open("assets/highScore.txt", "w")
-                self.high_score_make_json=json.dumps(self.high_score_dict)
-                self.high_score_file.write(self.high_score_make_json)
-                self.high_score_file.close()
-
-                       
+ 
+            #8 seconds after pacman collides with a big dot, the ghost images return to their
+            #  original image            
             if pygame.time.get_ticks()>=self.time+8000 and self.ghost_state==2: 
                 self.ghost_state=1           
                 for ghost in self.ghost_sprite:
@@ -372,16 +380,26 @@ class Controller:
                             ghost.image= self.pink_ghost 
                     elif self.mode==2:
                         ghost.image=self.colin_ghost_image
- 
+          
+            #The high schore is updated if the current score is greater than the current high score
+            if (self.current_score)>(int(self.high_score)):
+                self.high_score=self.current_score
+                self.high_score_dict["High Score"]=self.high_score
+                self.high_score_file=open("assets/highScore.txt", "w")
+                self.high_score_make_json=json.dumps(self.high_score_dict)
+                self.high_score_file.write(self.high_score_make_json)
+                self.high_score_file.close()
+
+            #if pacman collides with a ghost who is in its normal state, it loses a live and returns to 
+            #  the starting point
             self.ghost_collide = self.Pacman.ghostCollide(self.ghost_sprite)
             if self.ghost_state == 1 and self.ghost_collide[0]:
                 self.Pacman.lives -= 1
                 self.Pacman.rect.x=self.create_map.pacman_x  
                 self.Pacman.rect.y=self.create_map.pacman_y
-                 #   ghost.rect.x = self.create_map.ghost_x
-                  #  ghost.rect.y = self.create_map.ghost_y
-                   # ghost.direction=0
                 self.reset()
+            #if pacman collides with a ghost after a big dot has been eaten, it gains 200 points and goes
+            #  back into the box, choosing between the original position of pink or orange ghost
             elif self.ghost_state == 2 and self.ghost_collide[0]: 
                 self.current_score+=200           
                 if self.ghost_collide[1].color=="red":
@@ -402,14 +420,15 @@ class Controller:
                     self.ghost_collide[1].direction = 1
             
        
-                
+            #If all of the dots are eaten, Pacman returns to original position and the game is reset
+            #  Pacman's speed will be increased by 1 for next level     
             if self.small_dot_amt==0 and self.big_dot_amt==0:
                 self.Pacman.rect.x=self.create_map.pacman_x  
                 self.Pacman.rect.y=self.create_map.pacman_y
                 self.Pacman.speed+=1
                 self.reset()
 
-
+            #If pacman goes out of screen on one side, he comes in from the other side
             self.Pacman.outsideMap()
 
             #Scoreboard
@@ -463,15 +482,19 @@ class Controller:
 
 
     def reset(self):
-   
+        #reset Pacman's direction to be facing right
         self.Pacman.direction=0
+
+        #Puts pacman's image back to original image depending on what mode it's in
         if self.mode==1:
             self.Pacman.image=self.original_pacman_image
         elif self.mode==2:
             self.Pacman.image=self.steven_image
-            
+        
+        #Gets time    
         self.time=pygame.time.get_ticks()
 
+        #Resets ghosts to original position in gate and resets direction
         for ghost in self.ghost_sprite:
             if ghost.color=="red":
                 ghost.rect.x=self.create_map.ghost_rx
@@ -492,6 +515,9 @@ class Controller:
                 ghost.rect.y=self.create_map.ghost_oy
                 ghost.direction = 1
                 ghost.gate=1
+
+        #if all dots eaten, resets game to go to start game screen and reinitializes values of small and 
+        #  big dot amounts, redefines small and big dot sprite groups to include all of the dots
         if self.small_dot_amt==0 and self.big_dot_amt==0:
             self.timer=True
             self.small_dot_amt=len(self.map_background[1])
@@ -499,7 +525,11 @@ class Controller:
             self.dot_sprites = pygame.sprite.Group(self.map_background[1])
             self.big_dot_sprites=pygame.sprite.Group(self.map_background[3])     
             self.startGameLoop()
-        elif self.Pacman.lives==0:
+        #if no lives are left, the game is over, it reinitializes values of small and 
+        #  big dot amounts, redefines small and big dot sprite groups to include all of the dots, 
+        #  turns the timer true for the start game screen, resets Pacman's lives to 3 
+        #  and goes to the game over screen
+        elif self.Pacman.lives==0:            
             self.timer=True
             self.small_dot_amt=len(self.map_background[1])
             self.big_dot_amt=len(self.map_background[3])        
@@ -511,13 +541,15 @@ class Controller:
 
 
     def endScreen(self):
-        while True:
-            
+        while True:            
             self.background.fill((0, 0, 0))
             for event in pygame.event.get():
                 if event.type==pygame.QUIT:
                     sys.exit()
-                if event.type == pygame.KEYDOWN:                   
+             # when a key is pressed, it changes current score to 0 for next time game is played and 
+             #  goes back to start menu
+                if event.type == pygame.KEYDOWN: 
+                    self.current_score=0                  
                     self.startMenu()
 
             #Game Over Logo created            
