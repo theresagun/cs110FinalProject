@@ -10,7 +10,7 @@ import json
 
 class Controller:
     def __init__ (self, width=1050, height=1050):
-	'''
+        '''
 	Initialize contoller object with attributes: width, height, screen, caption, background, mode, time, ghost_state, time, current_score,
 	high_score, create_map, map_background, wall_sprites, dot_sprites, node_sprites, big_dot_sprites, ghost_sprite, pacman_sprite, 
 	speed. 
