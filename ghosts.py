@@ -3,6 +3,9 @@ import random
 
 class Ghost(pygame.sprite.Sprite):
     def __init__(self, x, y, img_file, direction, color, gate):
+        '''
+        Initializes a ghost object with attributes: image, rect, rect.x, rect.y, speed, direction, wall_right, wall_below, wall_above, wall_left, collide_wall_list.
+        '''
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("assets/" + img_file).convert_alpha()
         self.image = pygame.transform.scale(self.image, (15,15)).convert_alpha()
@@ -18,24 +21,10 @@ class Ghost(pygame.sprite.Sprite):
         self.collide_wall_list = []
         self.color=color
         self.gate=gate
-
- 
- 
-     #def createTestSprites(self):
-         #self.north = ghostTestSprite(self.rect.x, self.rect.y - 15)
-         #self.south = ghostTestSprite(self.rect.x, self.rect.y + 15)
-         #self.east = ghostTestSprite(self.rect.x + 15, self.rect.y)
-         #self.west = ghostTestSprite(self.rect.x - 15, self.rect.y)
-
-         #self.test_tiles = pygame.sprite.Group([self.north, self.south, self.east, self.west])
-
+        
     def wallCollide(self, walls):
         '''
-        for wall in walls:
-           for tile in self.test_tiles:
-                if pygame.sprite.collide_rect(wall, tile):
-                    print(tile)
-                    self.collide_tile_list.append(tile)
+        Determines if the ghost collides with a wall.
         '''
         for wall in walls:
             if self.rect.midright[0] in range(wall.rect.midleft[0]-2, wall.rect.midleft[0]+2) and self.rect.midright[1] in range(wall.rect.midleft[1]-2, wall.rect.midleft[1]+2):#self.rect.midright[0] + 1 == wall.rect.midleft[0] and self.rect.midright[1] == wall.rect.midleft[1]:
@@ -61,24 +50,19 @@ class Ghost(pygame.sprite.Sprite):
                 self.wall_below = True
                 self.collide_wall_list.append(self.wall_below)
 
-
-        #print (self.collide_wall_list)
-        
-
-        #if len(self.collide_tile_list) == 0:
-            #return (False, self.collide_tile_list)
-        #else:
-            #return (True, self.collide_tile_list)
-
     def nodeCollide(self, nodes):
+        '''
+        Determines if ghost collides with a node.
+        '''
         for node in nodes:
            if self.rect.center == node.rect.center:
                  return True
         return False
- 
 
     def move(self):
-
+        '''
+        Ghost moves based on set direction and speed.
+        '''
         if self.direction == 0:
             self.rect.x += self.speed
         elif self.direction == 1:
@@ -90,21 +74,42 @@ class Ghost(pygame.sprite.Sprite):
 
         
     def outsideMap(self):
+        '''
+        If ghost leaves the map, it will return from the opposide side.
+        '''
         if self.rect.midleft[0] > 420:
             self.rect.x = 1
         elif self.rect.midright[0] < 15:
             self.rect.x = 405
         
     def turnRight(self):
+        '''
+        Ghost turns right.
+        '''
         self.direction = 0
+        
     def turnUp(self):
+        '''
+        Ghost turns up.
+        '''
         self.direction = 1
+        
     def turnLeft(self):
+        '''
+        Ghost turns left.
+        '''
         self.direction = 2
+        
     def turnDown(self):
+        '''
+        Ghost turns down.
+        '''
         self.direction = 3
 
     def oppositeDirection(self):
+        '''
+        Ghost reverses direction.
+        '''
         if self.direction==0:
             self.direction=2
         elif self.direction==1:
@@ -115,6 +120,9 @@ class Ghost(pygame.sprite.Sprite):
             self.direction=1
 
     def inGateMove(self, walls):
+        '''
+        Ghost bounces in the box.
+        '''
         self.wallCollide(walls)
         if self.wall_above:
             self.oppositeDirection()
@@ -130,6 +138,9 @@ class Ghost(pygame.sprite.Sprite):
    
 
     def update(self, nodes, walls):
+        '''
+        Determines which way the ghost goes.
+        '''
         if self.nodeCollide(nodes) == True:
             self.wallCollide(walls)
             
