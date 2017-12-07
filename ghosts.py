@@ -129,8 +129,6 @@ class Ghost(pygame.sprite.Sprite):
             self.rect.y -= 2
 
         #resets the wall values to be false
-        self.wall_left = False
-        self.wall_right = False
         self.wall_above = False
         self.wall_below = False
         self.collide_wall_list = []
