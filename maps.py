@@ -12,7 +12,7 @@ class Map:
         '''
         Initializes map object with attributes: map_file, display_size, tile_size, tile_list, wall_list, dot_list, big_dot_list, node_list.
         '''
-        #self.map_file is a text file with a bunch of 1's and 0's based on what we want in that position.
+        #self.map_file is a text file with a bunch of characters based on what we want in that position.
         self.map_file = open('assets/map.txt', 'r')
 
         #self.display_size is the size of the display, this may not need to be used in this class
@@ -28,8 +28,6 @@ class Map:
         Reads a text file with directions on how to create the map.
         Loads in image files respectively.
         '''
-        #this reads the file and creates a list of 1's and 0's based on each line of the file
-        #self.tile_list looks like -> [['1', '1', '1',...], ['1', '0', '0',...], [...], ...]
         self.tile_list = []
         for line in self.map_file:
             self.tile_list.append(list(line.rstrip()))
@@ -37,7 +35,7 @@ class Map:
 
         #reads the self.tile_list, the 'row' variable is the index of the current list iteration,
         #the 'col' is index of each character in the current 'row'. This loops through each
-        #tile in the 2D list and then creates a 'Wall' sprite in the correct spot.
+        #tile in the 2D list and then creates, for example, a 'Wall' sprite in the correct spot.
         #it then returns the wall_list so we can make it a sprite group and blit it to the screen.
         self.wall_list = []
         self.dot_list = []
