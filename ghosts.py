@@ -114,6 +114,18 @@ class Ghost(pygame.sprite.Sprite):
         elif self.direction==3:
             self.direction=1
 
+    def inGateMove(self, walls):
+        self.wallCollide(walls)
+        if self.wall_above:
+            self.oppositeDirection()
+            self.rect.y += 2
+        elif self.wall_below:
+            self.oppositeDirection()
+            self.rect.y -= 2
+        self.wall_above = False
+        self.wall_below = False
+        self.collide_wall_list = []
+
 
    
 

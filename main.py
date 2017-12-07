@@ -20,7 +20,7 @@ class Controller:
         self.mode=1
         self.timer=True
         self.ready=False
-        self.ghost_state=1       
+        self.ghost_state=1      
         self.time=pygame.time.get_ticks()
 
         self.current_score=0 
@@ -293,6 +293,9 @@ class Controller:
                     ghost.update(self.node_sprites, self.wall_sprites)
                     ghost.outsideMap()
                     ghost.move()
+                if ghost.gate==1:
+                    ghost.inGateMove(self.wall_sprites)
+                    ghost.move()
                   
             if self.Pacman.canMove(self.wall_sprites):
                 self.Pacman.move()
@@ -380,24 +383,23 @@ class Controller:
                    # ghost.direction=0
                 self.reset()
             elif self.ghost_state == 2 and self.ghost_collide[0]: 
-                self.current_score+=200            
+                self.current_score+=200           
                 if self.ghost_collide[1].color=="red":
-                    self.ghost_collide[1].rect.x=self.create_map.ghost_rx
-                    self.ghost_collide[1].rect.y=self.create_map.ghost_ry-30
-                    self.ghost_collide[1].direction=random.choice([0,2])
-                    self.ghost_collide[1].gate=1
-                elif self.ghost_collide[1].color=="blue":
-                    self.ghost_collide[1].rect.x=self.create_map.ghost_bx
-                    self.ghost_collide[1].rect.y=self.create_map.ghost_by
-                    self.ghost_collide[1].gate=1
-                elif self.ghost_collide[1].color=="pink":
-                    self.ghost_collide[1].rect.x=self.create_map.ghost_px
+                    self.ghost_collide[1].rect.x=random.choice([self.create_map.ghost_px-15, self.create_map.ghost_ox])
                     self.ghost_collide[1].rect.y=self.create_map.ghost_py
-                    self.ghost_collide[1].gate=1
+                    self.ghost_collide[1].direction = 1
+                elif self.ghost_collide[1].color=="blue":
+                    self.ghost_collide[1].rect.x=random.choice([self.create_map.ghost_px-15, self.create_map.ghost_ox])
+                    self.ghost_collide[1].rect.y=self.create_map.ghost_py
+                    self.ghost_collide[1].direction = 1
+                elif self.ghost_collide[1].color=="pink":
+                    self.ghost_collide[1].rect.x=random.choice([self.create_map.ghost_px-15, self.create_map.ghost_ox])
+                    self.ghost_collide[1].rect.y=self.create_map.ghost_py
+                    self.ghost_collide[1].direction = 1
                 elif self.ghost_collide[1].color=="orange":
-                    self.ghost_collide[1].rect.x=self.create_map.ghost_ox
-                    self.ghost_collide[1].rect.y=self.create_map.ghost_oy
-                    self.ghost_collide[1].gate=1   
+                    self.ghost_collide[1].rect.x=random.choice([self.create_map.ghost_px-15, self.create_map.ghost_ox])
+                    self.ghost_collide[1].rect.y=self.create_map.ghost_py
+                    self.ghost_collide[1].direction = 1
             
        
                 
@@ -478,14 +480,17 @@ class Controller:
             elif ghost.color=="blue":
                 ghost.rect.x=self.create_map.ghost_bx
                 ghost.rect.y=self.create_map.ghost_by
+                ghost.direction = 1
                 ghost.gate=1
             elif ghost.color=="pink":
                 ghost.rect.x=self.create_map.ghost_px
                 ghost.rect.y=self.create_map.ghost_py
+                ghost.direction = 1
                 ghost.gate=1
             elif ghost.color=="orange":
                 ghost.rect.x=self.create_map.ghost_ox
                 ghost.rect.y=self.create_map.ghost_oy
+                ghost.direction = 1
                 ghost.gate=1
         if self.small_dot_amt==0 and self.big_dot_amt==0:
             self.timer=True
