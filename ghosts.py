@@ -3,7 +3,7 @@ import random
 
 class Ghost(pygame.sprite.Sprite):
     def __init__(self, x, y, img_file, direction, color, gate):
-         '''
+        '''
         Initializes a ghost object with attributes: image, rect, rect.x, rect.y, speed, direction, wall_right, wall_below, wall_above, wall_left, collide_wall_list.
         '''
         #initializes the sprite class
