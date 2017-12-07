@@ -10,6 +10,11 @@ import json
 
 class Controller:
     def __init__ (self, width=1050, height=1050):
+	'''
+	Initialize contoller object with attributes: width, height, screen, caption, background, mode, time, ghost_state, time, current_score,
+	high_score, create_map, map_background, wall_sprites, dot_sprites, node_sprites, big_dot_sprites, ghost_sprite, pacman_sprite, 
+	speed. 
+	'''
         #initialize pygame and pygame mixer for sounds
         pygame.init()
         pygame.mixer.init()
@@ -80,6 +85,9 @@ class Controller:
  
 
     def startMenu(self):
+	'''
+	Creates start menu with options to play two different modes. Press left key for mode 1, press right key for mode 2.
+	'''
         while True:
             self.background.fill((0, 0, 0))
             #if left key pressed, regular pacman version appears
@@ -160,6 +168,9 @@ class Controller:
 
 
     def startGameLoop(self):
+	'''
+	Displays game screen with the directions to press any key to begin. 
+	'''
         while True:
             self.background.fill((0, 0, 0))
             #when a key is pressed, a sound will play, the game will delay for 5 seconds
@@ -212,6 +223,9 @@ class Controller:
             pygame.display.flip()
  
     def gameLoop(self):
+	'''
+	Pacman game: use directional keys to move pacman, collect dots for points, avoid ghosts to keep as many lives as possible.
+	'''
         self.time=pygame.time.get_ticks()          
         while True:          
             self.background.fill((0, 0, 0))
@@ -482,6 +496,9 @@ class Controller:
 
 
     def reset(self):
+	'''
+	Resets pacman game screen.
+	'''
         #reset Pacman's direction to be facing right
         self.Pacman.direction=0
 
@@ -541,6 +558,9 @@ class Controller:
 
 
     def endScreen(self):
+	'''
+	Displays end screen: "GAME OVER" and final score. Press any key to play again, brings you back to main menu.
+	'''
         while True:            
             self.background.fill((0, 0, 0))
             for event in pygame.event.get():
