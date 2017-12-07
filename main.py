@@ -168,7 +168,7 @@ class Controller:
 
 
     def startGameLoop(self):
-	'''
+        '''
 	Displays game screen with the directions to press any key to begin. 
 	'''
         while True:
@@ -223,7 +223,7 @@ class Controller:
             pygame.display.flip()
  
     def gameLoop(self):
-	'''
+        '''
 	Pacman game: use directional keys to move pacman, collect dots for points, avoid ghosts to keep as many lives as possible.
 	'''
         self.time=pygame.time.get_ticks()          
@@ -496,7 +496,7 @@ class Controller:
 
 
     def reset(self):
-	'''
+        '''
 	Resets pacman game screen.
 	'''
         #reset Pacman's direction to be facing right
@@ -558,7 +558,7 @@ class Controller:
 
 
     def endScreen(self):
-	'''
+        '''
 	Displays end screen: "GAME OVER" and final score. Press any key to play again, brings you back to main menu.
 	'''
         while True:            
