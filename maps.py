@@ -9,6 +9,9 @@ import random
 
 class Map:
     def __init__(self, display_size, tile_size):
+        '''
+        Initializes a map object with attributes: map_file, display_size, tile_size, tile_list, wall_list, dot_list, big_dot_list, node_list.
+        '''
         #self.map_file is a text file with a bunch of 1's and 0's based on what we want in that position.
         self.map_file = open('assets/map.txt', 'r')
 
