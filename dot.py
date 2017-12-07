@@ -1,6 +1,9 @@
 import pygame
 
 class Dot(pygame.sprite.Sprite):
+    '''
+    Initializes dot object with attributes: image, rect, rect.x, rect.y, state.
+    '''
     def __init__(self, x, y, img_file, state):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("assets/" + img_file).convert()
